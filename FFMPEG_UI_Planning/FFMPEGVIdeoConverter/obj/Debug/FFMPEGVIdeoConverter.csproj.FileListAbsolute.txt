@@ -1,0 +1,5 @@
+C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\bin\Debug\FFMPEGVIdeoConverter.dll
+C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\bin\Debug\FFMPEGVIdeoConverter.pdb
+C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.csprojResolveAssemblyReference.cache
+C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.dll
+C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.pdb
