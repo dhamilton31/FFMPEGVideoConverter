@@ -16,3 +16,6 @@ C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEG_UI_Planning\ob
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.Form1.resources
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.Properties.Resources.resources
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.csproj.GenerateResource.Cache
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEG_UI_Planning.exe.config
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.exe
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.pdb

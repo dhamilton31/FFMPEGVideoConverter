@@ -25,13 +25,17 @@ namespace FFMPEGVideoConverterUnitTests
             }
         }
 
+        [TestMethod]
         public void FileConverterTest()
         {
             FileConverter fc = new FileConverter(dirPath);
             VideoData vd = fc.GetFilesList();
+            int i = 1;
             foreach (string file in vd.FilesInDirectory)
             {
-
+                string fileName = "File" + i.ToString("D2") + ".txt";
+                i++;
+                Assert.AreEqual(file, fileName);
             }
         }
     }
