@@ -27,7 +27,7 @@ namespace FFMPEGVideoConverter
         /// </summary>
         /// <param name="dirPath">Path to directory, leave blank to use
         /// the directory passed in through constructor</param>
-        /// <returns></returns>
+        /// <returns>True if files were found with the extension</returns>
         public bool AnalyzeDirectory(string dirPath = "")
         {
             bool bSuccess = false;
@@ -59,9 +59,27 @@ namespace FFMPEGVideoConverter
             return starttime;
         }
 
+        public void SetPatientName(string name)
+        {
+            if(videoData != null)
+            {
+                videoData.PatientName = name;
+            }
+        }
+
         public VideoData GetFilesList()
         {
             return videoData;
+        }
+
+        public string GetInputDirectory()
+        {
+            return fileSorter.GetDirectory();
+        }
+
+        public void SetNewFileExt(string newExt)
+        {
+            this.fileExt = newExt;
         }
     }
 }

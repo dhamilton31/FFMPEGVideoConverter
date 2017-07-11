@@ -78,5 +78,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FFMPEGVIdeoConverter\FFMPEGVIdeoConverter.csproj">
+      <Project>{849fdb75-a595-4782-abe6-cca6743c38fc}</Project>
+      <Name>FFMPEGVIdeoConverter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,3 +6,11 @@ C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVideoConverterU
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.csprojResolveAssemblyReference.cache
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.dll
 C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.pdb
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\bin\Debug\FFMPEGVideoConverterUnitTests.dll
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\bin\Debug\FFMPEGVideoConverterUnitTests.pdb
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\bin\Debug\FFMPEGVIdeoConverter.dll
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\bin\Debug\FFMPEGVIdeoConverter.pdb
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.csprojResolveAssemblyReference.cache
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.dll
+C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\obj\Debug\FFMPEGVideoConverterUnitTests.pdb

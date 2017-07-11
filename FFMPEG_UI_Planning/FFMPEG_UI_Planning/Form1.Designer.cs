@@ -1,6 +1,6 @@
 ﻿namespace FFMPEG_UI_Planning
 {
-    partial class Form1
+    partial class MainVideoConverterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,12 +31,12 @@
             this.lBDirectories = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbPatientName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnAddDir = new System.Windows.Forms.Button();
+            this.btnRemoveDir = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbFiles = new System.Windows.Forms.ListBox();
@@ -70,12 +70,12 @@
             this.progressBar1.Size = new System.Drawing.Size(553, 23);
             this.progressBar1.TabIndex = 2;
             // 
-            // textBox2
+            // tbPatientName
             // 
-            this.textBox2.Location = new System.Drawing.Point(94, 37);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 3;
+            this.tbPatientName.Location = new System.Drawing.Point(94, 37);
+            this.tbPatientName.Name = "tbPatientName";
+            this.tbPatientName.Size = new System.Drawing.Size(100, 20);
+            this.tbPatientName.TabIndex = 3;
             // 
             // label1
             // 
@@ -86,24 +86,24 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Patient Name:";
             // 
-            // button1
+            // btnAddDir
             // 
-            this.button1.Location = new System.Drawing.Point(47, 254);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(58, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "add";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnAddDir.Location = new System.Drawing.Point(47, 254);
+            this.btnAddDir.Name = "btnAddDir";
+            this.btnAddDir.Size = new System.Drawing.Size(58, 23);
+            this.btnAddDir.TabIndex = 5;
+            this.btnAddDir.Text = "add";
+            this.btnAddDir.UseVisualStyleBackColor = true;
+            this.btnAddDir.Click += new System.EventHandler(this.btnAddDir_Click);
             // 
-            // button2
+            // btnRemoveDir
             // 
-            this.button2.Location = new System.Drawing.Point(126, 253);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(62, 23);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "remove";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnRemoveDir.Location = new System.Drawing.Point(126, 253);
+            this.btnRemoveDir.Name = "btnRemoveDir";
+            this.btnRemoveDir.Size = new System.Drawing.Size(62, 23);
+            this.btnRemoveDir.TabIndex = 6;
+            this.btnRemoveDir.Text = "remove";
+            this.btnRemoveDir.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -115,15 +115,15 @@
             this.button3.Text = "START CONVERSION";
             this.button3.UseVisualStyleBackColor = false;
             // 
-            // dateTimePicker1
+            // dateTimePicker
             // 
-            this.dateTimePicker1.CustomFormat = "dd-MM-yyyy";
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(94, 98);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(118, 20);
-            this.dateTimePicker1.TabIndex = 8;
-            this.dateTimePicker1.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
+            this.dateTimePicker.CustomFormat = "dd-MM-yyyy";
+            this.dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePicker.Location = new System.Drawing.Point(94, 98);
+            this.dateTimePicker.Name = "dateTimePicker";
+            this.dateTimePicker.Size = new System.Drawing.Size(118, 20);
+            this.dateTimePicker.TabIndex = 8;
+            this.dateTimePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
             // 
             // label2
             // 
@@ -139,8 +139,8 @@
             this.groupBox1.Controls.Add(this.lbFiles);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
+            this.groupBox1.Controls.Add(this.tbPatientName);
+            this.groupBox1.Controls.Add(this.dateTimePicker);
             this.groupBox1.Location = new System.Drawing.Point(234, 21);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(452, 189);
@@ -156,19 +156,19 @@
             this.lbFiles.Size = new System.Drawing.Size(168, 134);
             this.lbFiles.TabIndex = 10;
             // 
-            // Form1
+            // MainVideoConverterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 473);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnRemoveDir);
+            this.Controls.Add(this.btnAddDir);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.lBDirectories);
-            this.Name = "Form1";
+            this.Name = "MainVideoConverterForm";
             this.Text = "Form1";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -182,12 +182,12 @@
         private System.Windows.Forms.ListBox lBDirectories;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbPatientName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnAddDir;
+        private System.Windows.Forms.Button btnRemoveDir;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox lbFiles;

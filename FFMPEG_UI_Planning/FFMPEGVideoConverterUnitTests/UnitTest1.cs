@@ -9,7 +9,8 @@ namespace FFMPEGVideoConverterUnitTests
     [TestClass]
     public class UnitTest1
     {
-        string dirPath = @"C:\Users\Daniel\Documents\Work\Contract\FFMPEG_UI_Planning\FFMPEGVideoConverterUnitTests\UnitTestDirectory";
+        string dirPath = System.IO.Path.GetFullPath(@"..\..\UnitTestDirectory");
+
         [TestMethod]
         public void FileSorterTest()
         {
@@ -23,12 +24,24 @@ namespace FFMPEGVideoConverterUnitTests
                 string fileName = "File" + (i + 1).ToString("D2") + ".txt";
                 Assert.AreEqual(Path.GetFileName(lsFiles[i]), fileName);
             }
+            Assert.AreEqual(dirPath, fs.GetDirectory());
         }
 
         [TestMethod]
-        public void FileConverterTest()
+        public void FileConverterMp4Test()
         {
             FileConverter fc = new FileConverter(dirPath);
+            Assert.IsTrue(fc.AnalyzeDirectory());
+            VideoData vd = fc.GetFilesList();
+            Assert.AreEqual(vd.FilesInDirectory[0], "File06.mp4");
+        }
+
+        [TestMethod]
+        public void FileConverterTxtTest()
+        {
+            FileConverter fc = new FileConverter(dirPath);
+            fc.SetNewFileExt("txt");
+            Assert.IsTrue(fc.AnalyzeDirectory());
             VideoData vd = fc.GetFilesList();
             int i = 1;
             foreach (string file in vd.FilesInDirectory)
@@ -37,6 +50,19 @@ namespace FFMPEGVideoConverterUnitTests
                 i++;
                 Assert.AreEqual(file, fileName);
             }
+            fc.SetNewFileExt("avi");
+            Assert.IsTrue(fc.AnalyzeDirectory());
+            vd = fc.GetFilesList();
+            Assert.AreEqual(vd.FilesInDirectory[0], "File05.avi");
+        }
+
+        [TestMethod]
+        public void FileConverterDirNameTest()
+        {
+            FileConverter fc = new FileConverter(dirPath);
+            Assert.IsTrue(fc.AnalyzeDirectory());
+            Assert.AreEqual(dirPath, fc.GetInputDirectory());
+
         }
     }
 }

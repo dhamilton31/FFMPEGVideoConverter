@@ -52,5 +52,10 @@ namespace FFMPEGVideoConverter
         {
             return SortedFiles;
         }
+
+        public string GetDirectory()
+        {
+            return dirPath;
+        }
     }
 }
