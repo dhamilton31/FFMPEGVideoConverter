@@ -36,17 +36,21 @@
             this.btnAddDir = new System.Windows.Forms.Button();
             this.btnRemoveDir = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.datePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.lbFiles = new System.Windows.Forms.ListBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.timePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lBDirectories
             // 
             this.lBDirectories.FormattingEnabled = true;
-            this.lBDirectories.Location = new System.Drawing.Point(29, 21);
+            this.lBDirectories.Location = new System.Drawing.Point(29, 34);
             this.lBDirectories.Name = "lBDirectories";
             this.lBDirectories.Size = new System.Drawing.Size(178, 212);
             this.lBDirectories.TabIndex = 0;
@@ -72,10 +76,11 @@
             // 
             // tbPatientName
             // 
-            this.tbPatientName.Location = new System.Drawing.Point(94, 37);
+            this.tbPatientName.Location = new System.Drawing.Point(101, 37);
             this.tbPatientName.Name = "tbPatientName";
             this.tbPatientName.Size = new System.Drawing.Size(100, 20);
             this.tbPatientName.TabIndex = 3;
+            this.tbPatientName.TextChanged += new System.EventHandler(this.tbPatientName_TextChanged);
             // 
             // label1
             // 
@@ -104,26 +109,27 @@
             this.btnRemoveDir.TabIndex = 6;
             this.btnRemoveDir.Text = "remove";
             this.btnRemoveDir.UseVisualStyleBackColor = true;
+            this.btnRemoveDir.Click += new System.EventHandler(this.btnRemoveDir_Click);
             // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.LightGreen;
             this.button3.Location = new System.Drawing.Point(253, 238);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(419, 59);
+            this.button3.Size = new System.Drawing.Size(453, 59);
             this.button3.TabIndex = 7;
             this.button3.Text = "START CONVERSION";
             this.button3.UseVisualStyleBackColor = false;
             // 
-            // dateTimePicker
+            // datePicker
             // 
-            this.dateTimePicker.CustomFormat = "dd-MM-yyyy";
-            this.dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker.Location = new System.Drawing.Point(94, 98);
-            this.dateTimePicker.Name = "dateTimePicker";
-            this.dateTimePicker.Size = new System.Drawing.Size(118, 20);
-            this.dateTimePicker.TabIndex = 8;
-            this.dateTimePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
+            this.datePicker.CustomFormat = "dd-MM-yyyy";
+            this.datePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.datePicker.Location = new System.Drawing.Point(94, 98);
+            this.datePicker.Name = "datePicker";
+            this.datePicker.Size = new System.Drawing.Size(118, 20);
+            this.datePicker.TabIndex = 8;
+            this.datePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
             // 
             // label2
             // 
@@ -136,17 +142,29 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.timePicker);
+            this.groupBox1.Controls.Add(this.lblTime);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.lbFiles);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.tbPatientName);
-            this.groupBox1.Controls.Add(this.dateTimePicker);
+            this.groupBox1.Controls.Add(this.datePicker);
             this.groupBox1.Location = new System.Drawing.Point(234, 21);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(452, 189);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "Video Data Details";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(270, 18);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(115, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Files To Be Converted:";
             // 
             // lbFiles
             // 
@@ -156,11 +174,40 @@
             this.lbFiles.Size = new System.Drawing.Size(168, 134);
             this.lbFiles.TabIndex = 10;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(30, 11);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(83, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Directory Name:";
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(22, 147);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(33, 13);
+            this.lblTime.TabIndex = 12;
+            this.lblTime.Text = "Time:";
+            // 
+            // timePicker
+            // 
+            this.timePicker.CustomFormat = "dd-MM-yyyy";
+            this.timePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.timePicker.Location = new System.Drawing.Point(94, 147);
+            this.timePicker.Name = "timePicker";
+            this.timePicker.Size = new System.Drawing.Size(118, 20);
+            this.timePicker.TabIndex = 13;
+            this.timePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
+            // 
             // MainVideoConverterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 473);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.btnRemoveDir);
@@ -187,10 +234,14 @@
         private System.Windows.Forms.Button btnAddDir;
         private System.Windows.Forms.Button btnRemoveDir;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.DateTimePicker dateTimePicker;
+        private System.Windows.Forms.DateTimePicker datePicker;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox lbFiles;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DateTimePicker timePicker;
+        private System.Windows.Forms.Label lblTime;
     }
 }
 

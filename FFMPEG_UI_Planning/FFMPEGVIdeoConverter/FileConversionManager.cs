@@ -55,5 +55,33 @@ namespace FFMPEGVideoConverter
             }
             return new VideoData();
         }
+
+        public bool DeleteFileConverter(string dir)
+        {
+            for (int i = 0; i < fileConverters.Count; i++)
+            {
+                if (fileConverters[i].GetInputDirectory() == dir)
+                {
+                    fileConverters.RemoveAt(i);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Update the name of the patient for this
+        /// group of videos
+        /// </summary>
+        /// <param name="dir">Directory holding these videos</param>
+        /// <param name="newName">New patient name</param>
+        public void UpdatePatientName(string dir, string newName)
+        {
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if(vd != null)
+            {
+                vd.PatientName = newName;
+            }
+        }
     }
 }
