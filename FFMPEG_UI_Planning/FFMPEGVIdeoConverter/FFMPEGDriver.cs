@@ -7,12 +7,23 @@ namespace FFMPEGVideoConverter
     public class FFMPEGDriver
     {
         private int maxProcessWaitTimeMs = 5000;
+        private string pathToFFPROBE = @"C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\ffmpeg\ffprobe.exe";
 
-        public string RetrieveTimestampMetadata(string pathToFile)
+        public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = @"ffprobe -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i " + pathToFile;
+            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
-            return outputTime;
+            return ConvertTimeStampToDateTime(outputTime);
+
+
+        }
+
+        private DateTime ConvertTimeStampToDateTime(string timeString)
+        {
+            if (!string.IsNullOrEmpty(timeString))
+            {
+
+            }
         }
 
         public string ConcatenateFilesConvertAddTimestamp(DateTime time)
@@ -29,6 +40,8 @@ namespace FFMPEGVideoConverter
             startInfo.FileName = "cmd.exe";
             startInfo.Arguments = command;
             process.StartInfo = startInfo;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.UseShellExecute = false;
             process.Start();
             // Do not wait for the child process to exit before
             // reading to the end of its redirected stream.
