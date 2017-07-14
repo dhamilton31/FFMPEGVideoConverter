@@ -13,11 +13,13 @@ namespace FFMPEGVideoConverter
     {
         private VideoData videoData;
         private FileSorter fileSorter;
+        private FFMPEGDriver ffmpegDriver;
         private string fileExt = "mp4";
         
         public FileConverter(string dirPath)
         {
             fileSorter = new FileSorter(dirPath);
+            ffmpegDriver = new FFMPEGDriver();
         }
 
         /// <summary>

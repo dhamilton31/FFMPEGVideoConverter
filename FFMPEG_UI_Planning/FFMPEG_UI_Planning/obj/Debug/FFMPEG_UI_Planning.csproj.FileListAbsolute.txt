@@ -27,3 +27,14 @@ C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Plan
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.Properties.Resources.resources
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.csproj.GenerateResource.Cache
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.MainVideoConverterForm.resources
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEG_UI_Planning.exe.config
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.csprojResolveAssemblyReference.cache
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.MainVideoConverterForm.resources
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.Properties.Resources.resources
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.csproj.GenerateResource.Cache
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEG_UI_Planning.exe
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEG_UI_Planning.pdb
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEGVIdeoConverter.dll
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\bin\Debug\FFMPEGVIdeoConverter.pdb
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.exe
+C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEG_UI_Planning\obj\Debug\FFMPEG_UI_Planning.pdb

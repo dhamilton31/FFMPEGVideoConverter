@@ -15,6 +15,10 @@ namespace FFMPEGVideoConverter
             return outputTime;
         }
 
+        public string ConcatenateFilesConvertAddTimestamp(DateTime time)
+        {
+            return "";
+        }
 
         private string ExecuteFFMPEGCommand(string command)
         {
