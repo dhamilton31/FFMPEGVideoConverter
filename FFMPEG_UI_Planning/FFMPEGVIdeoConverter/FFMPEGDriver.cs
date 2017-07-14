@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FFMPEGVideoConverter
 {
@@ -9,6 +10,11 @@ namespace FFMPEGVideoConverter
         private int maxProcessWaitTimeMs = 5000;
         private string pathToFFPROBE = @"C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\ffmpeg\ffprobe.exe";
 
+        /// <summary>
+        /// Attempts to use ffprobe to get the time metadata. 
+        /// </summary>
+        /// <param name="pathToFile"></param>
+        /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
             string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
@@ -20,10 +26,19 @@ namespace FFMPEGVideoConverter
 
         private DateTime ConvertTimeStampToDateTime(string timeString)
         {
+            string pattern = @"[0-9]+:[0-9]+:[0-9]+:[0-9]+";
+            DateTime dt = DateTime.MinValue;
             if (!string.IsNullOrEmpty(timeString))
             {
-
+                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+                MatchCollection matches = rgx.Matches(timeString);
+                if (matches.Count > 0)
+                {
+                    Match match = matches[0];
+                    dt = DateTime.ParseExact(timeString, "HH:mm:ss:ff", null);
+                }
             }
+            return dt;
         }
 
         public string ConcatenateFilesConvertAddTimestamp(DateTime time)

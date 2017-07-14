@@ -53,11 +53,16 @@ namespace FFMPEGVideoConverter
 
         private DateTime DetermineStartTime(string filePath)
         {
-            DateTime starttime = DateTime.Now;
+            DateTime starttime = DateTime.MinValue;
             if(File.Exists(filePath))
-            {
-                //starttime = File.GetCreationTime(filePath);
-                ffmpegDriver.RetrieveTimestampMetadata(filePath);
+            { 
+                starttime = ffmpegDriver.RetrieveTimestampMetadata(filePath);
+                // We will resort to using the file creation date if getting the metadata from FFMPEG 
+                // driver fails.
+                if(starttime == DateTime.MinValue)
+                {
+                    starttime = File.GetCreationTime(filePath);
+                }
             }
             return starttime;
         }
