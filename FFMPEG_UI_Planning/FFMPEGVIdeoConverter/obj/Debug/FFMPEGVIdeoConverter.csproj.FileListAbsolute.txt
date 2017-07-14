@@ -8,7 +8,3 @@ C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVIdeoCon
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.csprojResolveAssemblyReference.cache
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.dll
 C:\Users\Daniel\Documents\Work\Contract\GitHub\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.pdb
-C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\bin\Debug\FFMPEGVIdeoConverter.dll
-C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\bin\Debug\FFMPEGVIdeoConverter.pdb
-C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.dll
-C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\FFMPEGVIdeoConverter\obj\Debug\FFMPEGVIdeoConverter.pdb
