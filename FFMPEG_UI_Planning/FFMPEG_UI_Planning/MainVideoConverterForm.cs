@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -99,6 +100,7 @@ namespace FFMPEG_UI_Planning
             }
             datePicker.Value = vd.StartDateTime;
             tbTime.Text = vd.StartDateTime.ToString("HH:MM:ss:fff");
+            tbOutputFileName.Text = vd.OutputFileName;
         }
 
         private void AddNewDirectoryAndFilesToLists(string dirName)
@@ -131,6 +133,24 @@ namespace FFMPEG_UI_Planning
         private void tbTime_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbOutputFileName_TextChanged(object sender, EventArgs e)
+        {
+            Regex regex = new Regex(@".+\.avi");
+            Match match = regex.Match(tbOutputFileName.Text);
+            if (!String.IsNullOrEmpty(tbOutputFileName.Text))
+            {
+                if (!match.Success)
+                {
+                    tbOutputFileName.Text = tbOutputFileName.Text + ".avi";
+                }
+            }
+            VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+            if (selectedVidDir != null)
+            {
+                fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath, tbOutputFileName.Text);
+            }
         }
     }
 }

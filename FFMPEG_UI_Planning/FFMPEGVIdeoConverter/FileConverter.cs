@@ -46,6 +46,7 @@ namespace FFMPEGVideoConverter
                 // Since the files are sorted, we should be able
                 // to get the date from just the first file.
                 videoData.StartDateTime = DetermineStartTime(files[0]);
+                videoData.OutputFileName = "outputVideo";
                 bSuccess = true;
             }
             return bSuccess;
@@ -65,14 +66,6 @@ namespace FFMPEGVideoConverter
                 }
             }
             return starttime;
-        }
-
-        public void SetPatientName(string name)
-        {
-            if(videoData != null)
-            {
-                videoData.PatientName = name;
-            }
         }
 
         public VideoData GetFilesList()

@@ -44,6 +44,8 @@
             this.lbFiles = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tbTime = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbOutputFileName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +64,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(602, 116);
+            this.textBox1.Size = new System.Drawing.Size(681, 116);
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "This is where the output of the video conversion and the status\r\nwill be displaye" +
     "d";
@@ -71,14 +73,14 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(119, 303);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(553, 23);
+            this.progressBar1.Size = new System.Drawing.Size(641, 23);
             this.progressBar1.TabIndex = 2;
             // 
             // tbPatientName
             // 
             this.tbPatientName.Location = new System.Drawing.Point(101, 37);
             this.tbPatientName.Name = "tbPatientName";
-            this.tbPatientName.Size = new System.Drawing.Size(111, 20);
+            this.tbPatientName.Size = new System.Drawing.Size(182, 20);
             this.tbPatientName.TabIndex = 3;
             this.tbPatientName.TextChanged += new System.EventHandler(this.tbPatientName_TextChanged);
             // 
@@ -125,16 +127,16 @@
             // 
             this.datePicker.CustomFormat = "dd-MM-yyyy";
             this.datePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.datePicker.Location = new System.Drawing.Point(94, 98);
+            this.datePicker.Location = new System.Drawing.Point(94, 114);
             this.datePicker.Name = "datePicker";
-            this.datePicker.Size = new System.Drawing.Size(118, 20);
+            this.datePicker.Size = new System.Drawing.Size(189, 20);
             this.datePicker.TabIndex = 8;
             this.datePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 98);
+            this.label2.Location = new System.Drawing.Point(22, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 9;
@@ -142,6 +144,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tbOutputFileName);
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.tbTime);
             this.groupBox1.Controls.Add(this.lblTime);
             this.groupBox1.Controls.Add(this.label3);
@@ -152,7 +156,7 @@
             this.groupBox1.Controls.Add(this.datePicker);
             this.groupBox1.Location = new System.Drawing.Point(234, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(452, 189);
+            this.groupBox1.Size = new System.Drawing.Size(551, 189);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video Data Details";
@@ -169,7 +173,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(270, 18);
+            this.label3.Location = new System.Drawing.Point(357, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(115, 13);
             this.label3.TabIndex = 11;
@@ -178,9 +182,9 @@
             // lbFiles
             // 
             this.lbFiles.FormattingEnabled = true;
-            this.lbFiles.Location = new System.Drawing.Point(270, 37);
+            this.lbFiles.Location = new System.Drawing.Point(358, 37);
             this.lbFiles.Name = "lbFiles";
-            this.lbFiles.Size = new System.Drawing.Size(168, 134);
+            this.lbFiles.Size = new System.Drawing.Size(153, 134);
             this.lbFiles.TabIndex = 10;
             // 
             // label4
@@ -196,9 +200,26 @@
             // 
             this.tbTime.Location = new System.Drawing.Point(94, 147);
             this.tbTime.Name = "tbTime";
-            this.tbTime.Size = new System.Drawing.Size(118, 20);
+            this.tbTime.Size = new System.Drawing.Size(189, 20);
             this.tbTime.TabIndex = 13;
             this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(25, 76);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(73, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Output Name:";
+            // 
+            // tbOutputFileName
+            // 
+            this.tbOutputFileName.Location = new System.Drawing.Point(101, 72);
+            this.tbOutputFileName.Name = "tbOutputFileName";
+            this.tbOutputFileName.Size = new System.Drawing.Size(182, 20);
+            this.tbOutputFileName.TabIndex = 15;
+            this.tbOutputFileName.TextChanged += new System.EventHandler(this.tbOutputFileName_TextChanged);
             // 
             // MainVideoConverterForm
             // 
@@ -240,6 +261,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.TextBox tbTime;
+        private System.Windows.Forms.TextBox tbOutputFileName;
+        private System.Windows.Forms.Label label5;
     }
 }
 

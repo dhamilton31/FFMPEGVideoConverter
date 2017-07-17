@@ -14,6 +14,7 @@ namespace FFMPEGVideoConverter
         private List<string> filesInDirectory;
         private DateTime startDateTime;
         private string patientName;
+        private string outputFileName;
 
         public List<string> FilesInDirectory
         {
@@ -59,6 +60,19 @@ namespace FFMPEGVideoConverter
             }
         }
 
+        public string OutputFileName
+        {
+            get
+            {
+                return outputFileName;
+            }
+
+            set
+            {
+                outputFileName = value;
+            }
+        }
+
         public VideoData()
         {
             FilesInDirectory = new List<string>();
@@ -71,6 +85,7 @@ namespace FFMPEGVideoConverter
             this.FilesInDirectory = videoData.FilesInDirectory;
             this.StartDateTime = videoData.StartDateTime;
             this.PatientName = videoData.PatientName;
+            this.outputFileName = videoData.outputFileName;
         }
     }
 }

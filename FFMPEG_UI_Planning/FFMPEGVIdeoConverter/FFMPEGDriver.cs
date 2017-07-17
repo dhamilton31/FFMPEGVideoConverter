@@ -20,8 +20,6 @@ namespace FFMPEGVideoConverter
             string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
-
-
         }
 
         private DateTime ConvertTimeStampToDateTime(string timeString)

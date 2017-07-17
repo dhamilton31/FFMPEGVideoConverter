@@ -83,5 +83,14 @@ namespace FFMPEGVideoConverter
                 vd.PatientName = newName;
             }
         }
+
+        public void UpdateOutputVideoFileName(string dir, string newName)
+        {
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if (vd != null && !String.IsNullOrEmpty(newName))
+            {
+                vd.OutputFileName = newName;
+            }
+        }
     }
 }
