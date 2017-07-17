@@ -10,6 +10,7 @@ namespace FFMPEGVideoConverter
     {
         private int maxProcessWaitTimeMs = 5000;
         private string pathToFFPROBE = @"FFMPEG\ffprobe.exe";
+        private string pathToFFMPEG = @"FFMPEG\ffmpeg.exe";
         private string filesListToAppendFileName = @"Files_for_Append.txt";
         private string tempOutputFileName = @"temp_output.avi";
         private string pathToDirectory;
@@ -33,6 +34,11 @@ namespace FFMPEGVideoConverter
             return ConvertTimeStampToDateTime(outputTime);
         }
 
+
+        /// <summary>
+        /// Runs FFMPEG command to append files in the video list together.
+        /// </summary>
+        /// <returns>True if sucessful</returns>
         public bool AppendVideoFiles()
         {
             bool bSuccess = false;
@@ -40,7 +46,8 @@ namespace FFMPEGVideoConverter
             {
                 string dirPathToFileList = pathToDirectory + filesListToAppendFileName;
                 string dirPathToTempOutput = pathToDirectory + filesListToAppendFileName;
-                string commandOut = "ffmpeg - f concat - i " + dirPathToFileList + " - q 10 " + dirPathToTempOutput;
+                string commandOut = pathToFFMPEG + " - f concat - i " + dirPathToFileList + " - q 10 " + dirPathToTempOutput;
+                ExecuteFFMPEGCommand(commandOut);
             }
             return bSuccess;
         }

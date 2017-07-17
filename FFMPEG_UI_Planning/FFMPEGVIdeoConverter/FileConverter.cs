@@ -41,6 +41,10 @@ namespace FFMPEGVideoConverter
             {
                 fileSorter = new FileSorter(dirPath);
             }
+            else
+            {
+                SendOutputToRelayer("Directory path error has occurred");
+            }
 
             List<string> files = fileSorter.FindAndSort(fileExt);
             if (files.Count > 0)
@@ -52,6 +56,10 @@ namespace FFMPEGVideoConverter
                 videoData.StartDateTime = DetermineStartTime(files[0]);
                 videoData.OutputFileName = "outputVideo";
                 bSuccess = true;
+            }
+            else
+            {
+                SendOutputToRelayer("No files were found in directory " + dirPath);
             }
             return bSuccess;
         }
@@ -66,6 +74,7 @@ namespace FFMPEGVideoConverter
                 // driver fails.
                 if(starttime == DateTime.MinValue)
                 {
+                    SendOutputToRelayer("File start time missing or invalid - using file creation time instead");
                     starttime = File.GetCreationTime(filePath);
                 }
             }
