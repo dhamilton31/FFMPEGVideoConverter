@@ -62,7 +62,33 @@ namespace FFMPEGVideoConverterUnitTests
             FileConverter fc = new FileConverter(dirPath);
             Assert.IsTrue(fc.AnalyzeDirectory());
             Assert.AreEqual(dirPath, fc.GetInputDirectory());
+        }
 
+        [TestMethod]
+        public void FFMPEGDriverFileListTest()
+        {
+            FFMPEGDriver driver = new FFMPEGDriver(dirPath);
+            List<string> filesList = new List<string>();
+            filesList.Add("file01.mp4");
+            filesList.Add("file02.mp4");
+            filesList.Add("file03.mp4");
+            filesList.Add("file04.mp4");
+            driver.CreateListFilesToAppend(filesList);
+
+            int counter = 0;
+            string line;
+
+            // Read the file and display it line by line.
+            System.IO.StreamReader file =
+               new System.IO.StreamReader(dirPath + "Files_for_Append.txt");
+            while ((line = file.ReadLine()) != null)
+            {
+                counter++;
+                Assert.AreEqual(line, "file \'file" + counter.ToString("D2") +".mp4\'");
+                
+            }
+
+            file.Close();
         }
     }
 }

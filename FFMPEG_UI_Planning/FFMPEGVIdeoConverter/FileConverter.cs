@@ -22,7 +22,7 @@ namespace FFMPEGVideoConverter
         public FileConverter(string dirPath, OutputTextRelayer fileRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
-            ffmpegDriver = new FFMPEGDriver();
+            ffmpegDriver = new FFMPEGDriver(dirPath);
             this.fileRelayer = fileRelayer;
         }
 
