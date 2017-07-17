@@ -9,6 +9,7 @@ namespace FFMPEGVideoConverter
     {
         private int maxProcessWaitTimeMs = 5000;
         private string pathToFFPROBE = @"FFMPEG\ffprobe.exe";
+        private string filesListToAppendFileName = @"FFMPEG\Files_for_Append.txt";
 
         /// <summary>
         /// Attempts to use ffprobe to get the time metadata. 
@@ -33,7 +34,7 @@ namespace FFMPEGVideoConverter
                 if (matches.Count > 0)
                 {
                     Match match = matches[0];
-                    dt = DateTime.ParseExact(timeString, "HH:mm:ss:ff", null);
+                    dt = DateTime.ParseExact(match.Value, "HH:mm:ss:ff", null);
                 }
             }
             return dt;

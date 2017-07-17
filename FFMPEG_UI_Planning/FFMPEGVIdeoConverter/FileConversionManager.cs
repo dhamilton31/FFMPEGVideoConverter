@@ -1,11 +1,16 @@
-﻿using System;
+﻿using FFMPEGVIdeoConverter;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FFMPEGVideoConverter
 {
+    public delegate void OutputTextHandler(object sender, OutputTextEventArgs e);
+
     public class FileConversionManager
     {
+        public event OutputTextHandler OnOutputTextReceived;
+
         /// <summary>
         /// We will have one file converter object for each directory containing a list 
         /// of files we wish to convert
@@ -81,6 +86,7 @@ namespace FFMPEGVideoConverter
             if(vd != null)
             {
                 vd.PatientName = newName;
+                WriteOutputText("Patient name updated");
             }
         }
 
@@ -90,6 +96,24 @@ namespace FFMPEGVideoConverter
             if (vd != null && !String.IsNullOrEmpty(newName))
             {
                 vd.OutputFileName = newName;
+            }
+        }
+
+        public void WriteOutputText(OutputTextEventArgs outEventArgs)
+        {
+            if (OnOutputTextReceived != null && outEventArgs != null)
+            {
+                OnOutputTextReceived(this, outEventArgs);
+            }
+        }
+
+        public void WriteOutputText(string line)
+        {
+            OutputTextEventArgs outEventArgs = new OutputTextEventArgs();
+            outEventArgs.AddTextToOutput(line);
+            if (OnOutputTextReceived != null)
+            {
+                OnOutputTextReceived(this, outEventArgs);
             }
         }
     }
