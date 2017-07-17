@@ -15,11 +15,15 @@ namespace FFMPEGVideoConverter
         private FileSorter fileSorter;
         private FFMPEGDriver ffmpegDriver;
         private string fileExt = "mp4";
-        
-        public FileConverter(string dirPath)
+        private OutputTextRelayer fileRelayer;
+
+
+
+        public FileConverter(string dirPath, OutputTextRelayer fileRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
-            ffmpegDriver = new FFMPEGDriver();
+            ffmpegDriver = new FFMPEGDriver(dirPath);
+            this.fileRelayer = fileRelayer;
         }
 
         /// <summary>
@@ -37,6 +41,10 @@ namespace FFMPEGVideoConverter
             {
                 fileSorter = new FileSorter(dirPath);
             }
+            else
+            {
+                SendOutputToRelayer("Directory path error has occurred");
+            }
 
             List<string> files = fileSorter.FindAndSort(fileExt);
             if (files.Count > 0)
@@ -48,6 +56,10 @@ namespace FFMPEGVideoConverter
                 videoData.StartDateTime = DetermineStartTime(files[0]);
                 videoData.OutputFileName = "outputVideo";
                 bSuccess = true;
+            }
+            else
+            {
+                SendOutputToRelayer("No files were found in directory " + dirPath);
             }
             return bSuccess;
         }
@@ -62,6 +74,7 @@ namespace FFMPEGVideoConverter
                 // driver fails.
                 if(starttime == DateTime.MinValue)
                 {
+                    SendOutputToRelayer("File start time missing or invalid - using file creation time instead");
                     starttime = File.GetCreationTime(filePath);
                 }
             }
@@ -81,6 +94,16 @@ namespace FFMPEGVideoConverter
         public void SetNewFileExt(string newExt)
         {
             this.fileExt = newExt;
+        }
+
+        private void SendOutputToRelayer(string output)
+        {
+            if(fileRelayer != null)
+            {
+                List<string> lstOutput = new List<string>();
+                lstOutput.Add(output);
+                fileRelayer.RelayTextOutput(lstOutput);
+            }
         }
     }
 }

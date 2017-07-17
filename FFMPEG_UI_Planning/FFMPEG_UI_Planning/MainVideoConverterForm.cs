@@ -25,6 +25,16 @@ namespace FFMPEG_UI_Planning
             InitializeComponent();
             fileConversionManager = new FileConversionManager();
             lastOpenedDirectory = ReadLastOpenedDirectory();
+            fileConversionManager.OnOutputTextReceived += FileConversionManager_OnOutputTextReceived;
+        }
+
+        private void FileConversionManager_OnOutputTextReceived(object sender, FFMPEGVIdeoConverter.OutputTextEventArgs e)
+        {
+            List<string> output = e.ReadOutputText();
+            foreach (string s in output)
+            {
+                tbOutputText.Text += s + "\r\n";
+            }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -151,6 +161,11 @@ namespace FFMPEG_UI_Planning
             {
                 fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath, tbOutputFileName.Text);
             }
+        }
+
+        private void StartConversion_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

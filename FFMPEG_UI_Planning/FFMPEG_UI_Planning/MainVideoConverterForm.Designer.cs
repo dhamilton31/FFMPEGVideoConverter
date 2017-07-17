@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.lBDirectories = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbOutputText = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tbPatientName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnAddDir = new System.Windows.Forms.Button();
             this.btnRemoveDir = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnStartConversion = new System.Windows.Forms.Button();
             this.datePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbOutputFileName = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbTime = new System.Windows.Forms.TextBox();
             this.lblTime = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbFiles = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.tbTime = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbOutputFileName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,16 +58,16 @@
             this.lBDirectories.TabIndex = 0;
             this.lBDirectories.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
-            // textBox1
+            // tbOutputText
             // 
-            this.textBox1.Location = new System.Drawing.Point(104, 332);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(681, 116);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "This is where the output of the video conversion and the status\r\nwill be displaye" +
-    "d";
+            this.tbOutputText.Location = new System.Drawing.Point(104, 332);
+            this.tbOutputText.Multiline = true;
+            this.tbOutputText.Name = "tbOutputText";
+            this.tbOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbOutputText.Size = new System.Drawing.Size(681, 116);
+            this.tbOutputText.TabIndex = 1;
+            this.tbOutputText.Text = "This is where the output of the video conversion and the status will be displayed" +
+    "\r\n";
             // 
             // progressBar1
             // 
@@ -113,15 +113,16 @@
             this.btnRemoveDir.UseVisualStyleBackColor = true;
             this.btnRemoveDir.Click += new System.EventHandler(this.btnRemoveDir_Click);
             // 
-            // button3
+            // btnStartConversion
             // 
-            this.button3.BackColor = System.Drawing.Color.LightGreen;
-            this.button3.Location = new System.Drawing.Point(253, 238);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(453, 59);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "START CONVERSION";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnStartConversion.BackColor = System.Drawing.Color.LightGreen;
+            this.btnStartConversion.Location = new System.Drawing.Point(253, 238);
+            this.btnStartConversion.Name = "btnStartConversion";
+            this.btnStartConversion.Size = new System.Drawing.Size(453, 59);
+            this.btnStartConversion.TabIndex = 7;
+            this.btnStartConversion.Text = "START CONVERSION";
+            this.btnStartConversion.UseVisualStyleBackColor = false;
+            this.btnStartConversion.Click += new System.EventHandler(this.StartConversion_Click);
             // 
             // datePicker
             // 
@@ -161,6 +162,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video Data Details";
             // 
+            // tbOutputFileName
+            // 
+            this.tbOutputFileName.Location = new System.Drawing.Point(101, 72);
+            this.tbOutputFileName.Name = "tbOutputFileName";
+            this.tbOutputFileName.Size = new System.Drawing.Size(182, 20);
+            this.tbOutputFileName.TabIndex = 15;
+            this.tbOutputFileName.TextChanged += new System.EventHandler(this.tbOutputFileName_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(25, 76);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(73, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Output Name:";
+            // 
+            // tbTime
+            // 
+            this.tbTime.Location = new System.Drawing.Point(94, 147);
+            this.tbTime.Name = "tbTime";
+            this.tbTime.Size = new System.Drawing.Size(189, 20);
+            this.tbTime.TabIndex = 13;
+            this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            // 
             // lblTime
             // 
             this.lblTime.AutoSize = true;
@@ -196,31 +222,6 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Directory Name:";
             // 
-            // tbTime
-            // 
-            this.tbTime.Location = new System.Drawing.Point(94, 147);
-            this.tbTime.Name = "tbTime";
-            this.tbTime.Size = new System.Drawing.Size(189, 20);
-            this.tbTime.TabIndex = 13;
-            this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(25, 76);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Output Name:";
-            // 
-            // tbOutputFileName
-            // 
-            this.tbOutputFileName.Location = new System.Drawing.Point(101, 72);
-            this.tbOutputFileName.Name = "tbOutputFileName";
-            this.tbOutputFileName.Size = new System.Drawing.Size(182, 20);
-            this.tbOutputFileName.TabIndex = 15;
-            this.tbOutputFileName.TextChanged += new System.EventHandler(this.tbOutputFileName_TextChanged);
-            // 
             // MainVideoConverterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -228,11 +229,11 @@
             this.ClientSize = new System.Drawing.Size(837, 473);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btnStartConversion);
             this.Controls.Add(this.btnRemoveDir);
             this.Controls.Add(this.btnAddDir);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tbOutputText);
             this.Controls.Add(this.lBDirectories);
             this.Name = "MainVideoConverterForm";
             this.Text = "Form1";
@@ -246,13 +247,13 @@
         #endregion
 
         private System.Windows.Forms.ListBox lBDirectories;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbOutputText;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox tbPatientName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnAddDir;
         private System.Windows.Forms.Button btnRemoveDir;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnStartConversion;
         private System.Windows.Forms.DateTimePicker datePicker;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
