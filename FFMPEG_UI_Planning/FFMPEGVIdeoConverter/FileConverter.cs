@@ -15,11 +15,15 @@ namespace FFMPEGVideoConverter
         private FileSorter fileSorter;
         private FFMPEGDriver ffmpegDriver;
         private string fileExt = "mp4";
-        
-        public FileConverter(string dirPath)
+        private OutputTextRelayer fileRelayer;
+
+
+
+        public FileConverter(string dirPath, OutputTextRelayer fileRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
             ffmpegDriver = new FFMPEGDriver();
+            this.fileRelayer = fileRelayer;
         }
 
         /// <summary>
@@ -81,6 +85,16 @@ namespace FFMPEGVideoConverter
         public void SetNewFileExt(string newExt)
         {
             this.fileExt = newExt;
+        }
+
+        private void SendOutputToRelayer(string output)
+        {
+            if(fileRelayer != null)
+            {
+                List<string> lstOutput = new List<string>();
+                lstOutput.Add(output);
+                fileRelayer.RelayTextOutput(lstOutput);
+            }
         }
     }
 }

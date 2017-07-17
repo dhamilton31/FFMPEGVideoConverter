@@ -66,8 +66,8 @@
             this.tbOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbOutputText.Size = new System.Drawing.Size(681, 116);
             this.tbOutputText.TabIndex = 1;
-            this.tbOutputText.Text = "This is where the output of the video conversion and the status\r\nwill be displaye" +
-    "d";
+            this.tbOutputText.Text = "This is where the output of the video conversion and the status will be displayed" +
+    "\r\n";
             // 
             // progressBar1
             // 
