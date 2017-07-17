@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FFMPEGVideoConverter
 {
     public class FileConversionManager
     {
+
+        public enum VideoConversionError
+        {
+            ErrorNone = 0,
+            ErrorVideoDataNull,
+            ErrorNoFiles,
+            ErrorNoPatientName,
+            ErrorInvalidOutputName
+        }
+
         /// <summary>
         /// We will have one file converter object for each directory containing a list 
         /// of files we wish to convert
@@ -91,6 +102,40 @@ namespace FFMPEGVideoConverter
             {
                 vd.OutputFileName = newName;
             }
+        }
+
+        public VideoConversionError VerifyReadyForConversion(string dir)
+        {
+            VideoConversionError errorCode = VideoConversionError.ErrorNone;
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if(vd != null)
+            {
+                if(vd.FilesInDirectory.Count > 0)
+                {
+                    Regex regex = new Regex(@".+\.avi");
+                    Match match = regex.Match(vd.OutputFileName);
+                    if (match.Success)
+                    {
+                        if(String.IsNullOrEmpty(vd.PatientName))
+                        {
+                            errorCode = VideoConversionError.ErrorNoPatientName;
+                        }
+                    }
+                    else
+                    {
+                        errorCode = VideoConversionError.ErrorInvalidOutputName;
+                    }
+                }
+                else
+                {
+                    errorCode = VideoConversionError.ErrorNoFiles;
+                }
+            }
+            else
+            {
+                errorCode = VideoConversionError.ErrorVideoDataNull;
+            }
+            return errorCode;
         }
     }
 }
