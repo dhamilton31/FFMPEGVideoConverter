@@ -8,7 +8,7 @@ namespace FFMPEGVideoConverter
     public class FFMPEGDriver
     {
         private int maxProcessWaitTimeMs = 5000;
-        private string pathToFFPROBE = @"C:\Users\dh185148\Documents\FFMPEGVideoConverter\FFMPEG_UI_Planning\ffmpeg\ffprobe.exe";
+        private string pathToFFPROBE = @"FFMPEG\ffprobe.exe";
 
         /// <summary>
         /// Attempts to use ffprobe to get the time metadata. 

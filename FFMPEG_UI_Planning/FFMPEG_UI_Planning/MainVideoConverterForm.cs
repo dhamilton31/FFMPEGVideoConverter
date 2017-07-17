@@ -16,11 +16,14 @@ namespace FFMPEG_UI_Planning
     {
 
         private FileConversionManager fileConversionManager;
+        private string lastDirectoryOpenedFile = "lastDir.txt";
+        private string lastOpenedDirectory;
 
         public MainVideoConverterForm()
         {
             InitializeComponent();
             fileConversionManager = new FileConversionManager();
+            lastOpenedDirectory = ReadLastOpenedDirectory();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -37,6 +40,10 @@ namespace FFMPEG_UI_Planning
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Select the directory containing the video files you wish to add.";
+            if (!String.IsNullOrEmpty(lastOpenedDirectory))
+            {
+                fbd.SelectedPath = lastOpenedDirectory;
+            }
             DialogResult result = fbd.ShowDialog();
             string folderName;
             if (result == DialogResult.OK)
@@ -46,7 +53,39 @@ namespace FFMPEG_UI_Planning
                 if(vd != null)
                 {
                     AddNewDirectoryAndFilesToLists(fbd.SelectedPath);
+                    lastOpenedDirectory = fbd.SelectedPath;
+                    SaveLastOpenedDirectory(fbd.SelectedPath);
                 }
+            }
+        }
+
+        private string ReadLastOpenedDirectory()
+        {
+            string directory = "";
+            try
+            {
+                var fileStream = new FileStream(lastDirectoryOpenedFile, FileMode.Open, FileAccess.Read);
+                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+                {
+                    directory = streamReader.ReadToEnd();
+                }
+            }
+            catch (IOException ioEx)
+            {
+                Console.WriteLine("IO Exception: " + ioEx.ToString());
+            }
+            return directory;
+        }
+
+        private void SaveLastOpenedDirectory(string dirPath)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(lastDirectoryOpenedFile, dirPath);
+            }
+            catch(IOException ioEx)
+            {
+                Console.WriteLine("IO Exception: " + ioEx.ToString());
             }
         }
 
@@ -59,7 +98,7 @@ namespace FFMPEG_UI_Planning
                 lbFiles.Items.Add(Path.GetFileName(fileName));
             }
             datePicker.Value = vd.StartDateTime;
-            timePicker.Value = vd.StartDateTime;
+            tbTime.Text = vd.StartDateTime.ToString("HH:MM:ss:fff");
         }
 
         private void AddNewDirectoryAndFilesToLists(string dirName)
@@ -87,6 +126,11 @@ namespace FFMPEG_UI_Planning
                     lBDirectories.Items.Remove(selectedVidDir);
                 }
             }
+        }
+
+        private void tbTime_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

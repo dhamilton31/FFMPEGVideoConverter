@@ -39,11 +39,11 @@
             this.datePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblTime = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbFiles = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.lblTime = new System.Windows.Forms.Label();
-            this.timePicker = new System.Windows.Forms.DateTimePicker();
+            this.tbTime = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,7 +78,7 @@
             // 
             this.tbPatientName.Location = new System.Drawing.Point(101, 37);
             this.tbPatientName.Name = "tbPatientName";
-            this.tbPatientName.Size = new System.Drawing.Size(100, 20);
+            this.tbPatientName.Size = new System.Drawing.Size(111, 20);
             this.tbPatientName.TabIndex = 3;
             this.tbPatientName.TextChanged += new System.EventHandler(this.tbPatientName_TextChanged);
             // 
@@ -142,7 +142,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.timePicker);
+            this.groupBox1.Controls.Add(this.tbTime);
             this.groupBox1.Controls.Add(this.lblTime);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.lbFiles);
@@ -156,6 +156,15 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video Data Details";
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(22, 147);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(33, 13);
+            this.lblTime.TabIndex = 12;
+            this.lblTime.Text = "Time:";
             // 
             // label3
             // 
@@ -183,24 +192,13 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Directory Name:";
             // 
-            // lblTime
+            // tbTime
             // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(22, 147);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(33, 13);
-            this.lblTime.TabIndex = 12;
-            this.lblTime.Text = "Time:";
-            // 
-            // timePicker
-            // 
-            this.timePicker.CustomFormat = "dd-MM-yyyy";
-            this.timePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timePicker.Location = new System.Drawing.Point(94, 147);
-            this.timePicker.Name = "timePicker";
-            this.timePicker.Size = new System.Drawing.Size(118, 20);
-            this.timePicker.TabIndex = 13;
-            this.timePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
+            this.tbTime.Location = new System.Drawing.Point(94, 147);
+            this.tbTime.Name = "tbTime";
+            this.tbTime.Size = new System.Drawing.Size(118, 20);
+            this.tbTime.TabIndex = 13;
+            this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
             // 
             // MainVideoConverterForm
             // 
@@ -240,8 +238,8 @@
         private System.Windows.Forms.ListBox lbFiles;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DateTimePicker timePicker;
         private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.TextBox tbTime;
     }
 }
 
