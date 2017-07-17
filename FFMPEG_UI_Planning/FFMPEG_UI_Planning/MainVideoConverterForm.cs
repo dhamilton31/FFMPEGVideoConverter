@@ -152,16 +152,5 @@ namespace FFMPEG_UI_Planning
                 fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath, tbOutputFileName.Text);
             }
         }
-
-        private void StartStopConversion_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private bool ValidateReadyForConversion()
-        {
-            bool readyForConversion = false;
-            return readyForConversion;
-        }
     }
 }
