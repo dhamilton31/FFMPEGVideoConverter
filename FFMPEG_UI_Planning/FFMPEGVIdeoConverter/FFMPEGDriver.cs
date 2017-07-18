@@ -71,7 +71,10 @@ namespace FFMPEGVideoConverter
                 timestamp.Second.ToString("D2") + "\\:" + timestamp.Millisecond.ToString("D2");
             string dateStamp = timestamp.ToString("MM/dd/yyyy");
             string finalOutputFile = pathToDirectory + "\\" + outputName;
-            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -vf drawtext=\"fontsize = 15:fontfile = FFMPEG\\arial.ttf:timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF Otis\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
+            // The fontfile part is weird. it needs single quotes (fails with double) and needs \\ rather than just \ in the 
+            // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
+            // adjust down to just FFMPEG\\arial.ttf and see if it works.
+            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF Otis\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
             ExecuteFFMPEGCommand(addTimeStampCommand);
         }
 
