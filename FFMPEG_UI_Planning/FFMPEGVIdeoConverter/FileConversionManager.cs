@@ -41,7 +41,7 @@ namespace FFMPEGVideoConverter
                     return retVideoData;
                 }
             }
-            FileConverter newFileConverter = new FileConverter(newDirPath);
+            FileConverter newFileConverter = new FileConverter(newDirPath, textRelayer);
             if(newFileConverter.AnalyzeDirectory(newDirPath))
             {
                 WriteOutputText("Directory info sucessfully updated");
@@ -57,6 +57,16 @@ namespace FFMPEGVideoConverter
                 fileConverters.Add(newFileConverter);
             }
             return retVideoData;
+        }
+
+        public bool BeginFileConversion()
+        {
+            bool bSuccess = false;
+            foreach(FileConverter fc in fileConverters)
+            {
+                fc.BeginFileConversion();
+            }
+            return bSuccess;
         }
 
         /// <summary>
@@ -77,6 +87,11 @@ namespace FFMPEGVideoConverter
             return new VideoData();
         }
 
+        /// <summary>
+        /// Removes the selected directory from the list
+        /// </summary>
+        /// <param name="dir">Directory to remove</param>
+        /// <returns>True if directory is found and sucessfully removed</returns>
         public bool DeleteFileConverter(string dir)
         {
             for (int i = 0; i < fileConverters.Count; i++)
@@ -102,16 +117,22 @@ namespace FFMPEGVideoConverter
             if(vd != null)
             {
                 vd.PatientName = newName;
-                WriteOutputText("Patient name updated");
+                WriteOutputText("Patient name saved");
             }
         }
 
+        /// <summary>
+        /// Update the output video file name of the selected directory
+        /// </summary>
+        /// <param name="dir">Directory to update the output file for</param>
+        /// <param name="newName">New name of the output video file</param>
         public void UpdateOutputVideoFileName(string dir, string newName)
         {
             VideoData vd = GetVideoDataFromDirectory(dir);
             if (vd != null && !String.IsNullOrEmpty(newName))
             {
                 vd.OutputFileName = newName;
+                WriteOutputText("Output name saved");
             }
         }
 

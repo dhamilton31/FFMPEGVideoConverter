@@ -15,15 +15,13 @@ namespace FFMPEGVideoConverter
         private FileSorter fileSorter;
         private FFMPEGDriver ffmpegDriver;
         private string fileExt = "mp4";
-        private OutputTextRelayer fileRelayer;
+        private OutputTextRelayer outputLogRelayer;
 
-
-
-        public FileConverter(string dirPath, OutputTextRelayer fileRelayer = null)
+        public FileConverter(string dirPath, OutputTextRelayer outputLogRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
-            ffmpegDriver = new FFMPEGDriver(dirPath);
-            this.fileRelayer = fileRelayer;
+            ffmpegDriver = new FFMPEGDriver(dirPath, outputLogRelayer);
+            this.outputLogRelayer = outputLogRelayer;
         }
 
         /// <summary>
@@ -54,7 +52,8 @@ namespace FFMPEGVideoConverter
                 // Since the files are sorted, we should be able
                 // to get the date from just the first file.
                 videoData.StartDateTime = DetermineStartTime(files[0]);
-                videoData.OutputFileName = "outputVideo";
+                videoData.OutputFileName = "outputVideo.avi";
+                SendOutputToRelayer("Directory " + dirPath + " and files added.");
                 bSuccess = true;
             }
             else
@@ -81,6 +80,26 @@ namespace FFMPEGVideoConverter
             return starttime;
         }
 
+        public bool BeginFileConversion()
+        {
+            bool bSuccess = true;
+            ConvertFiles();
+            return bSuccess;
+        }
+
+        public void ConvertFiles()
+        {
+            if(ffmpegDriver.CreateListFilesToAppend(videoData.FilesInDirectory))
+            {
+                if(ffmpegDriver.AppendVideoFiles())
+                {
+                    ffmpegDriver.AddTimeStampOverlay(videoData.StartDateTime, videoData.OutputFileName);
+                }
+                
+            }
+            
+        }
+
         public VideoData GetFilesList()
         {
             return videoData;
@@ -98,11 +117,11 @@ namespace FFMPEGVideoConverter
 
         private void SendOutputToRelayer(string output)
         {
-            if(fileRelayer != null)
+            if(outputLogRelayer != null)
             {
                 List<string> lstOutput = new List<string>();
                 lstOutput.Add(output);
-                fileRelayer.RelayTextOutput(lstOutput);
+                outputLogRelayer.RelayTextOutput(lstOutput);
             }
         }
     }

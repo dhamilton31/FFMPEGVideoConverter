@@ -67,7 +67,7 @@ namespace FFMPEGVideoConverterUnitTests
         [TestMethod]
         public void FFMPEGDriverFileListTest()
         {
-            FFMPEGDriver driver = new FFMPEGDriver(dirPath);
+            FFMPEGDriver driver = new FFMPEGDriver(dirPath, null);
             List<string> filesList = new List<string>();
             filesList.Add("file01.mp4");
             filesList.Add("file02.mp4");

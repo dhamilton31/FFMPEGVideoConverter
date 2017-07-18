@@ -82,7 +82,7 @@
             this.tbPatientName.Name = "tbPatientName";
             this.tbPatientName.Size = new System.Drawing.Size(182, 20);
             this.tbPatientName.TabIndex = 3;
-            this.tbPatientName.TextChanged += new System.EventHandler(this.tbPatientName_TextChanged);
+            this.tbPatientName.LostFocus += new System.EventHandler(this.tbPatientName_TextChanged);
             // 
             // label1
             // 
@@ -168,7 +168,7 @@
             this.tbOutputFileName.Name = "tbOutputFileName";
             this.tbOutputFileName.Size = new System.Drawing.Size(182, 20);
             this.tbOutputFileName.TabIndex = 15;
-            this.tbOutputFileName.TextChanged += new System.EventHandler(this.tbOutputFileName_TextChanged);
+            this.tbOutputFileName.LostFocus += new System.EventHandler(this.tbOutputFileName_TextChanged);
             // 
             // label5
             // 

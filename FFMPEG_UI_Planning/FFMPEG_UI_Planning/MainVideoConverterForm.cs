@@ -121,6 +121,11 @@ namespace FFMPEG_UI_Planning
 
         private void tbPatientName_TextChanged(object sender, EventArgs e)
         {
+            UpdatePatiantName();
+        }
+
+        private void UpdatePatiantName()
+        {
             VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
             if (selectedVidDir != null && !String.IsNullOrEmpty(tbPatientName.Text))
             {
@@ -147,6 +152,11 @@ namespace FFMPEG_UI_Planning
 
         private void tbOutputFileName_TextChanged(object sender, EventArgs e)
         {
+            UpdateOutputFileName();
+        }
+
+        private void UpdateOutputFileName()
+        {
             Regex regex = new Regex(@".+\.avi");
             Match match = regex.Match(tbOutputFileName.Text);
             if (!String.IsNullOrEmpty(tbOutputFileName.Text))
@@ -165,7 +175,7 @@ namespace FFMPEG_UI_Planning
 
         private void StartConversion_Click(object sender, EventArgs e)
         {
-
+            fileConversionManager.BeginFileConversion();
         }
     }
 }
