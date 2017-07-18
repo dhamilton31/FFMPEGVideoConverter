@@ -76,6 +76,7 @@ namespace FFMPEGVideoConverter
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
             string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF Otis\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
             ExecuteFFMPEGCommand(addTimeStampCommand);
+            DeleteTempOutputFile();
         }
 
         /// <summary>
