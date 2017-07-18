@@ -19,6 +19,9 @@ namespace FFMPEG_UI_Planning
         private FileConversionManager fileConversionManager;
         private string lastDirectoryOpenedFile = "lastDir.txt";
         private string lastOpenedDirectory;
+        private string btnStartConversionText = "START CONVERSION";
+        private string btnInProgressConversionText = "CONVERSION IN PROGRESS...";
+        private Timer eventTimer;
 
         public MainVideoConverterForm()
         {
@@ -30,10 +33,22 @@ namespace FFMPEG_UI_Planning
 
         private void FileConversionManager_OnOutputTextReceived(object sender, FFMPEGVIdeoConverter.OutputTextEventArgs e)
         {
-            List<string> output = e.ReadOutputText();
-            foreach (string s in output)
+            if (InvokeRequired)
             {
-                tbOutputText.Text += s + "\r\n";
+                this.Invoke((MethodInvoker)delegate
+                {
+                    FileConversionManager_OnOutputTextReceived(sender, e);
+                });
+            }
+            else
+            {
+                List<string> output = e.ReadOutputText();
+                foreach (string s in output)
+                {
+                    tbOutputText.Text += s + "\r\n";
+                }
+                tbOutputText.SelectionStart = tbOutputText.TextLength;
+                tbOutputText.ScrollToCaret();
             }
         }
 
@@ -49,23 +64,26 @@ namespace FFMPEG_UI_Planning
 
         private void btnAddDir_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Select the directory containing the video files you wish to add.";
-            if (!String.IsNullOrEmpty(lastOpenedDirectory))
+            if (AcceptingInput())
             {
-                fbd.SelectedPath = lastOpenedDirectory;
-            }
-            DialogResult result = fbd.ShowDialog();
-            string folderName;
-            if (result == DialogResult.OK)
-            {
-                folderName = fbd.SelectedPath;
-                VideoData vd = fileConversionManager.AddNewDirectory(fbd.SelectedPath);
-                if(vd != null)
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                fbd.Description = "Select the directory containing the video files you wish to add.";
+                if (!String.IsNullOrEmpty(lastOpenedDirectory))
                 {
-                    AddNewDirectoryAndFilesToLists(fbd.SelectedPath);
-                    lastOpenedDirectory = fbd.SelectedPath;
-                    SaveLastOpenedDirectory(fbd.SelectedPath);
+                    fbd.SelectedPath = lastOpenedDirectory;
+                }
+                DialogResult result = fbd.ShowDialog();
+                string folderName;
+                if (result == DialogResult.OK)
+                {
+                    folderName = fbd.SelectedPath;
+                    VideoData vd = fileConversionManager.AddNewDirectory(fbd.SelectedPath);
+                    if (vd != null)
+                    {
+                        AddNewDirectoryAndFilesToLists(fbd.SelectedPath);
+                        lastOpenedDirectory = fbd.SelectedPath;
+                        SaveLastOpenedDirectory(fbd.SelectedPath);
+                    }
                 }
             }
         }
@@ -115,8 +133,12 @@ namespace FFMPEG_UI_Planning
 
         private void AddNewDirectoryAndFilesToLists(string dirName)
         {
-            VideoDirectory newVidDir = new VideoDirectory(dirName);
-            lBDirectories.Items.Add(newVidDir);
+            if (AcceptingInput())
+            {
+                VideoDirectory newVidDir = new VideoDirectory(dirName);
+                lBDirectories.Items.Add(newVidDir);
+                progressBar.Maximum = lBDirectories.Items.Count;
+            }
         }
 
         private void tbPatientName_TextChanged(object sender, EventArgs e)
@@ -126,21 +148,27 @@ namespace FFMPEG_UI_Planning
 
         private void UpdatePatiantName()
         {
-            VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
-            if (selectedVidDir != null && !String.IsNullOrEmpty(tbPatientName.Text))
+            if (AcceptingInput())
             {
-                fileConversionManager.UpdatePatientName(selectedVidDir.FullPath, tbPatientName.Text);
+                VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+                if (selectedVidDir != null && !String.IsNullOrEmpty(tbPatientName.Text))
+                {
+                    fileConversionManager.UpdatePatientName(selectedVidDir.FullPath, tbPatientName.Text);
+                }
             }
         }
 
         private void btnRemoveDir_Click(object sender, EventArgs e)
         {
-            VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
-            if (selectedVidDir != null)
+            if (AcceptingInput())
             {
-                if(fileConversionManager.DeleteFileConverter(selectedVidDir.FullPath))
+                VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+                if (selectedVidDir != null)
                 {
-                    lBDirectories.Items.Remove(selectedVidDir);
+                    if (fileConversionManager.DeleteFileConverter(selectedVidDir.FullPath))
+                    {
+                        lBDirectories.Items.Remove(selectedVidDir);
+                    }
                 }
             }
         }
@@ -157,25 +185,65 @@ namespace FFMPEG_UI_Planning
 
         private void UpdateOutputFileName()
         {
-            Regex regex = new Regex(@".+\.avi");
-            Match match = regex.Match(tbOutputFileName.Text);
-            if (!String.IsNullOrEmpty(tbOutputFileName.Text))
+            if (AcceptingInput())
             {
-                if (!match.Success)
+                Regex regex = new Regex(@".+\.avi");
+                Match match = regex.Match(tbOutputFileName.Text);
+                if (!String.IsNullOrEmpty(tbOutputFileName.Text))
                 {
-                    tbOutputFileName.Text = tbOutputFileName.Text + ".avi";
+                    if (!match.Success)
+                    {
+                        tbOutputFileName.Text = tbOutputFileName.Text + ".avi";
+                    }
                 }
-            }
-            VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
-            if (selectedVidDir != null)
-            {
-                fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath, tbOutputFileName.Text);
+                VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+                if (selectedVidDir != null)
+                {
+                    fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath, tbOutputFileName.Text);
+                }
             }
         }
 
         private void StartConversion_Click(object sender, EventArgs e)
         {
-            fileConversionManager.BeginFileConversion();
+            if (AcceptingInput())
+            {
+                btnAddDir.Enabled = false;
+                btnRemoveDir.Enabled = false;
+                tbOutputFileName.Enabled = false;
+                tbPatientName.Enabled = false;
+                fileConversionManager.BeginFileConversion();
+                btnStartConversion.Text = btnInProgressConversionText;
+                btnStartConversion.BackColor = Color.Salmon;
+                eventTimer = new Timer();
+                eventTimer.Tick += CheckConversionComplete_Tick;
+                eventTimer.Interval = 500;
+                eventTimer.Start();
+            }
+        }
+
+        private bool AcceptingInput()
+        {
+            return btnStartConversion.Text == btnStartConversionText;
+        }
+
+        private void CheckConversionComplete_Tick(object sender, EventArgs e)
+        {
+            if(fileConversionManager.GetCompletedVideoConversion() >= lBDirectories.Items.Count)
+            {
+                btnStartConversion.Text = btnStartConversionText;
+                btnStartConversion.BackColor = Color.LightGreen;
+                eventTimer.Stop();
+                if(fileConversionManager.ErrorsOccured())
+                {
+                    MessageBox.Show("WARNING!! Errors may have occurred! Please see output for details.","Video Conversion Error");
+                }
+                btnAddDir.Enabled = true;
+                btnRemoveDir.Enabled = true;
+                tbOutputFileName.Enabled = true;
+                tbPatientName.Enabled = true;
+            }
+            progressBar.Value = fileConversionManager.GetCompletedVideoConversion();
         }
     }
 }

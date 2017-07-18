@@ -17,6 +17,7 @@ namespace FFMPEGVideoConverter
         /// </summary>
         private List<FileConverter> fileConverters;
         private OutputTextRelayer textRelayer;
+        private int ConversionCompletedCount;
 
         public FileConversionManager()
         {
@@ -54,15 +55,42 @@ namespace FFMPEGVideoConverter
             retVideoData = newFileConverter.GetFilesList();
             if(retVideoData != null)
             {
+                newFileConverter.OnVideoConversionComplete += NewFileConverter_OnVideoConversionComplete; ;
                 fileConverters.Add(newFileConverter);
             }
             return retVideoData;
         }
 
+        private void NewFileConverter_OnVideoConversionComplete(object sender, EventArgs e)
+        {
+            ConversionCompletedCount++;
+            WriteOutputText("Videos compelted count: " + ConversionCompletedCount);
+        }
+
+        public int GetCompletedVideoConversion()
+        {
+            return ConversionCompletedCount;
+        }
+
+        public bool ErrorsOccured()
+        {
+            foreach(FileConverter con in fileConverters)
+            {
+                if(con.HadErrors())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool BeginFileConversion()
         {
             bool bSuccess = false;
-            foreach(FileConverter fc in fileConverters)
+            // Reset the number of FileConverters that have 
+            // completed their video conversion
+            ConversionCompletedCount = 0;
+            foreach (FileConverter fc in fileConverters)
             {
                 fc.BeginFileConversion();
             }
@@ -153,6 +181,8 @@ namespace FFMPEGVideoConverter
                 OnOutputTextReceived(this, outEventArgs);
             }
         }
+
+        
     }
 
     // The purprose of this class is to relay output messages from other classes created

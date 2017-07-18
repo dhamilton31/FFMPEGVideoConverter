@@ -30,7 +30,7 @@
         {
             this.lBDirectories = new System.Windows.Forms.ListBox();
             this.tbOutputText = new System.Windows.Forms.TextBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.tbPatientName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnAddDir = new System.Windows.Forms.Button();
@@ -69,12 +69,12 @@
             this.tbOutputText.Text = "This is where the output of the video conversion and the status will be displayed" +
     "\r\n";
             // 
-            // progressBar1
+            // progressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(119, 303);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(641, 23);
-            this.progressBar1.TabIndex = 2;
+            this.progressBar.Location = new System.Drawing.Point(119, 303);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(641, 23);
+            this.progressBar.TabIndex = 2;
             // 
             // tbPatientName
             // 
@@ -126,7 +126,7 @@
             // 
             // datePicker
             // 
-            this.datePicker.CustomFormat = "dd-MM-yyyy";
+            this.datePicker.CustomFormat = "MM/dd/yyyy";
             this.datePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.datePicker.Location = new System.Drawing.Point(94, 114);
             this.datePicker.Name = "datePicker";
@@ -183,6 +183,7 @@
             // 
             this.tbTime.Location = new System.Drawing.Point(94, 147);
             this.tbTime.Name = "tbTime";
+            this.tbTime.ReadOnly = true;
             this.tbTime.Size = new System.Drawing.Size(189, 20);
             this.tbTime.TabIndex = 13;
             this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
@@ -232,7 +233,7 @@
             this.Controls.Add(this.btnStartConversion);
             this.Controls.Add(this.btnRemoveDir);
             this.Controls.Add(this.btnAddDir);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.tbOutputText);
             this.Controls.Add(this.lBDirectories);
             this.Name = "MainVideoConverterForm";
@@ -248,7 +249,7 @@
 
         private System.Windows.Forms.ListBox lBDirectories;
         private System.Windows.Forms.TextBox tbOutputText;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.TextBox tbPatientName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnAddDir;

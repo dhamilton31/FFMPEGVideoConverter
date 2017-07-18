@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace FFMPEGVideoConverter
 {
+    public delegate void VideoConversionComplete(object sender, EventArgs e);
+
     /// <summary>
     /// Contains the list of files and info needed to 
     /// create the final converted video output.
@@ -16,12 +19,15 @@ namespace FFMPEGVideoConverter
         private FFMPEGDriver ffmpegDriver;
         private string fileExt = "mp4";
         private OutputTextRelayer outputLogRelayer;
+        private Thread convertVideoThread;
+        public event VideoConversionComplete OnVideoConversionComplete;
 
         public FileConverter(string dirPath, OutputTextRelayer outputLogRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
             ffmpegDriver = new FFMPEGDriver(dirPath, outputLogRelayer);
             this.outputLogRelayer = outputLogRelayer;
+            convertVideoThread = null;
         }
 
         /// <summary>
@@ -35,30 +41,37 @@ namespace FFMPEGVideoConverter
         public bool AnalyzeDirectory(string dirPath = "")
         {
             bool bSuccess = false;
-            if(!String.IsNullOrEmpty(dirPath))
+            if (convertVideoThread == null)
             {
-                fileSorter = new FileSorter(dirPath);
-            }
-            else
-            {
-                SendOutputToRelayer("Directory path error has occurred");
-            }
+                if (!String.IsNullOrEmpty(dirPath))
+                {
+                    fileSorter = new FileSorter(dirPath);
+                }
+                else
+                {
+                    SendOutputToRelayer("Directory path error has occurred");
+                }
 
-            List<string> files = fileSorter.FindAndSort(fileExt);
-            if (files.Count > 0)
-            {
-                videoData = new VideoData();
-                videoData.FilesInDirectory = files;
-                // Since the files are sorted, we should be able
-                // to get the date from just the first file.
-                videoData.StartDateTime = DetermineStartTime(files[0]);
-                videoData.OutputFileName = "outputVideo.avi";
-                SendOutputToRelayer("Directory " + dirPath + " and files added.");
-                bSuccess = true;
+                List<string> files = fileSorter.FindAndSort(fileExt);
+                if (files.Count > 0)
+                {
+                    videoData = new VideoData();
+                    videoData.FilesInDirectory = files;
+                    // Since the files are sorted, we should be able
+                    // to get the date from just the first file.
+                    videoData.StartDateTime = DetermineStartTime(files[0]);
+                    videoData.OutputFileName = "outputVideo.avi";
+                    SendOutputToRelayer("Directory " + dirPath + " and files added.");
+                    bSuccess = true;
+                }
+                else
+                {
+                    SendOutputToRelayer("No files were found in directory " + dirPath);
+                }
             }
             else
             {
-                SendOutputToRelayer("No files were found in directory " + dirPath);
+                SendOutputToRelayer("Can not analyze directory while running conversion");
             }
             return bSuccess;
         }
@@ -83,7 +96,11 @@ namespace FFMPEGVideoConverter
         public bool BeginFileConversion()
         {
             bool bSuccess = true;
-            ConvertFiles();
+            if (convertVideoThread == null)
+            {
+                convertVideoThread = new Thread(new ThreadStart(ConvertFiles));
+                convertVideoThread.Start();
+            }
             return bSuccess;
         }
 
@@ -93,11 +110,14 @@ namespace FFMPEGVideoConverter
             {
                 if(ffmpegDriver.AppendVideoFiles())
                 {
-                    ffmpegDriver.AddTimeStampOverlay(videoData.StartDateTime, videoData.OutputFileName);
+                    SendOutputToRelayer("Concatenated " + videoData.FilesInDirectory.Count + " video files in directory " + fileSorter.GetDirectory());
+                    ffmpegDriver.AddTimeStampOverlay(videoData.StartDateTime, videoData.OutputFileName, videoData.PatientName);
+                    SendOutputToRelayer("Timestamp overlay added" + fileSorter.GetDirectory());
+                    SendOutputToRelayer("****COMPLETE: " + fileSorter.GetDirectory() + "\\" + videoData.OutputFileName);
                 }
-                
             }
-            
+            convertVideoThread = null;
+            VideoConversionComplete();
         }
 
         public VideoData GetFilesList()
@@ -115,12 +135,25 @@ namespace FFMPEGVideoConverter
             this.fileExt = newExt;
         }
 
+        public bool HadErrors()
+        {
+            return ffmpegDriver.HadErrors();
+        }
+
+        public void VideoConversionComplete()
+        {
+            if(OnVideoConversionComplete != null)
+            {
+                OnVideoConversionComplete(this, new EventArgs());
+            }
+        }
+
         private void SendOutputToRelayer(string output)
         {
             if(outputLogRelayer != null)
             {
                 List<string> lstOutput = new List<string>();
-                lstOutput.Add(output);
+                lstOutput.Add((new DirectoryInfo(fileSorter.GetDirectory()).Name) + ": " + output);
                 outputLogRelayer.RelayTextOutput(lstOutput);
             }
         }
