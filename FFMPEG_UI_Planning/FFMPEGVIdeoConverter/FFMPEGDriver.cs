@@ -20,6 +20,9 @@ namespace FFMPEGVideoConverter
         bool hadError = false;
         private bool hadConcatErrors = false;
         private bool hadTimestampErrors = false;
+        // Change logging from error to verbose, debug, ect in order to 
+        // get more details in output logs
+        private string loggingLevel = "error"; 
 
         public FFMPEGDriver(string pathToDirectory, OutputTextRelayer outputLogRelayer)
         {
@@ -36,7 +39,7 @@ namespace FFMPEGVideoConverter
         /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
+            string timestampCommand = pathToFFPROBE + " -v error - select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
         }
@@ -56,7 +59,7 @@ namespace FFMPEGVideoConverter
             {
                 string dirPathToFileList = pathToDirectory + "\\" + filesListToAppendFileName;
                 string dirPathToTempOutput = pathToDirectory + "\\" + tempOutputFileName;
-                string commandOut = pathToFFMPEG + " -v error  -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
+                string commandOut = pathToFFMPEG + " -v " + loggingLevel +" -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
                 // We will wait up to two minutes in case of a lot of files.
                 SendOutputToRelayer(ExecuteFFMPEGCommand(commandOut, 120000, true));
                 if(VerifyTempFileWasCreated())
@@ -94,7 +97,7 @@ namespace FFMPEGVideoConverter
             // The fontfile part is weird. it needs single quotes (fails with double) and needs \\ rather than just \ in the 
             // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
-            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v error -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
+            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
             string output = ExecuteFFMPEGCommand(addTimeStampCommand, 120000, true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
@@ -239,6 +242,11 @@ namespace FFMPEGVideoConverter
         public bool HadErrors()
         {
             return hadTimestampErrors || hadConcatErrors;
+        }
+
+        public void Destroy()
+        {
+            errorLogFile.Close();
         }
 
         private void SendOutputToRelayer(List<string> output)

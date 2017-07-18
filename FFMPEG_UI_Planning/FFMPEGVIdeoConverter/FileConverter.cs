@@ -20,7 +20,11 @@ namespace FFMPEGVideoConverter
         private string fileExt = "mp4";
         private OutputTextRelayer outputLogRelayer;
         private Thread convertVideoThread;
-        public event VideoConversionComplete OnVideoConversionComplete;
+        public event VideoConversionComplete OnVideoConversionStepComplete;
+        // There are 2 main steps (concatination and timestamp burn in)
+        // per video output. Each FileConverter will report in
+        // when these two steps are completed
+        public const int CONVERSION_STEPS = 2;
 
         public FileConverter(string dirPath, OutputTextRelayer outputLogRelayer = null)
         {
@@ -99,6 +103,7 @@ namespace FFMPEGVideoConverter
             if (convertVideoThread == null)
             {
                 convertVideoThread = new Thread(new ThreadStart(ConvertFiles));
+                convertVideoThread.IsBackground = true;
                 convertVideoThread.Start();
             }
             return bSuccess;
@@ -106,18 +111,50 @@ namespace FFMPEGVideoConverter
 
         public void ConvertFiles()
         {
-            if(ffmpegDriver.CreateListFilesToAppend(videoData.FilesInDirectory))
+            try
             {
-                if(ffmpegDriver.AppendVideoFiles())
+                bool fileListCreatedSuccessfully = ffmpegDriver.CreateListFilesToAppend(videoData.FilesInDirectory);
+                if (fileListCreatedSuccessfully)
                 {
-                    SendOutputToRelayer("Concatenated " + videoData.FilesInDirectory.Count + " video files in directory " + fileSorter.GetDirectory());
-                    ffmpegDriver.AddTimeStampOverlay(videoData.StartDateTime, videoData.OutputFileName, videoData.PatientName);
-                    SendOutputToRelayer("Timestamp overlay added" + fileSorter.GetDirectory());
-                    SendOutputToRelayer("****COMPLETE: " + fileSorter.GetDirectory() + "\\" + videoData.OutputFileName);
+                    bool AppendVideoFilesSucessful = ffmpegDriver.AppendVideoFiles();
+                    // Report step 1 complete
+                    VideoConversionStepComplete();
+                    if (AppendVideoFilesSucessful)
+                    {
+                        SendOutputToRelayer("Concatenated " + videoData.FilesInDirectory.Count + " video files in directory " + fileSorter.GetDirectory());
+                        ffmpegDriver.AddTimeStampOverlay(videoData.StartDateTime, videoData.OutputFileName, videoData.PatientName);
+                        SendOutputToRelayer("Timestamp overlay added" + fileSorter.GetDirectory());
+                        SendOutputToRelayer("****COMPLETE: " + fileSorter.GetDirectory() + "\\" + videoData.OutputFileName);
+                    }
+                }
+                else
+                {
+                    SendOutputToRelayer("Creating file list for directory " + fileSorter.GetDirectory() +
+                        " has failed. Abandoning process...");
+                    // Report step 1 complete. We did not try because file list creation failed, step 1 is done/skipped.
+                    VideoConversionStepComplete();
+                }
+                // Report step 2 complete.
+                VideoConversionStepComplete();
+                convertVideoThread = null;
+            }
+            catch(ThreadAbortException abort)
+            {
+                SendOutputToRelayer(fileSorter.GetDirectory() + " Thread terminated unexpectedly. Program may be unstable. Please restart.");
+                SendOutputToRelayer("Error details: " + abort.ToString());
+            }
+        }
+
+        public void Destroy()
+        {
+            if(convertVideoThread != null)
+            {
+                if(convertVideoThread.Join(1000))
+                {
+                    convertVideoThread.Abort();
                 }
             }
-            convertVideoThread = null;
-            VideoConversionComplete();
+            ffmpegDriver.Destroy();
         }
 
         public VideoData GetFilesList()
@@ -140,11 +177,11 @@ namespace FFMPEGVideoConverter
             return ffmpegDriver.HadErrors();
         }
 
-        public void VideoConversionComplete()
+        public void VideoConversionStepComplete()
         {
-            if(OnVideoConversionComplete != null)
+            if(OnVideoConversionStepComplete != null)
             {
-                OnVideoConversionComplete(this, new EventArgs());
+                OnVideoConversionStepComplete(this, new EventArgs());
             }
         }
 

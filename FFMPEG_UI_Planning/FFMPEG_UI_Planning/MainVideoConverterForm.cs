@@ -137,7 +137,8 @@ namespace FFMPEG_UI_Planning
             {
                 VideoDirectory newVidDir = new VideoDirectory(dirName);
                 lBDirectories.Items.Add(newVidDir);
-                progressBar.Maximum = lBDirectories.Items.Count;
+                // We will get an update for each major conversion step completed for each output video
+                progressBar.Maximum = fileConversionManager.GetTotalNumberOfConversionSteps();
             }
         }
 
@@ -168,6 +169,7 @@ namespace FFMPEG_UI_Planning
                     if (fileConversionManager.DeleteFileConverter(selectedVidDir.FullPath))
                     {
                         lBDirectories.Items.Remove(selectedVidDir);
+                        progressBar.Maximum = fileConversionManager.GetTotalNumberOfConversionSteps();
                     }
                 }
             }
@@ -229,7 +231,7 @@ namespace FFMPEG_UI_Planning
 
         private void CheckConversionComplete_Tick(object sender, EventArgs e)
         {
-            if(fileConversionManager.GetCompletedVideoConversion() >= lBDirectories.Items.Count)
+            if(fileConversionManager.GetCompletedVideoConversion() >= fileConversionManager.GetTotalNumberOfConversionSteps())
             {
                 btnStartConversion.Text = btnStartConversionText;
                 btnStartConversion.BackColor = Color.LightGreen;

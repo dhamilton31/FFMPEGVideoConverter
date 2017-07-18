@@ -17,7 +17,7 @@ namespace FFMPEGVideoConverter
         /// </summary>
         private List<FileConverter> fileConverters;
         private OutputTextRelayer textRelayer;
-        private int ConversionCompletedCount;
+        private int ConversionStepsCompletedCount;
 
         public FileConversionManager()
         {
@@ -55,7 +55,7 @@ namespace FFMPEGVideoConverter
             retVideoData = newFileConverter.GetFilesList();
             if(retVideoData != null)
             {
-                newFileConverter.OnVideoConversionComplete += NewFileConverter_OnVideoConversionComplete; ;
+                newFileConverter.OnVideoConversionStepComplete += NewFileConverter_OnVideoConversionComplete; ;
                 fileConverters.Add(newFileConverter);
             }
             return retVideoData;
@@ -63,13 +63,18 @@ namespace FFMPEGVideoConverter
 
         private void NewFileConverter_OnVideoConversionComplete(object sender, EventArgs e)
         {
-            ConversionCompletedCount++;
-            WriteOutputText("Videos compelted count: " + ConversionCompletedCount);
+            ConversionStepsCompletedCount++;
+            WriteOutputText("Steps completed count: " + ConversionStepsCompletedCount);
         }
 
         public int GetCompletedVideoConversion()
         {
-            return ConversionCompletedCount;
+            return ConversionStepsCompletedCount;
+        }
+
+        public int GetTotalNumberOfConversionSteps()
+        {
+            return fileConverters.Count * FileConverter.CONVERSION_STEPS;
         }
 
         public bool ErrorsOccured()
@@ -89,7 +94,7 @@ namespace FFMPEGVideoConverter
             bool bSuccess = false;
             // Reset the number of FileConverters that have 
             // completed their video conversion
-            ConversionCompletedCount = 0;
+            ConversionStepsCompletedCount = 0;
             foreach (FileConverter fc in fileConverters)
             {
                 fc.BeginFileConversion();
@@ -126,6 +131,7 @@ namespace FFMPEGVideoConverter
             {
                 if (fileConverters[i].GetInputDirectory() == dir)
                 {
+                    fileConverters[i].Destroy();
                     fileConverters.RemoveAt(i);
                     return true;
                 }
