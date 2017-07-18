@@ -81,6 +81,7 @@ namespace FFMPEGVideoConverter
                 errorOutput.Add("!!!!!!!!!!!!!!!!");
                 SendOutputToRelayer(errorOutput);
             }
+            errorLogFile.Flush();
             return bSuccess;
         }
 
@@ -111,6 +112,7 @@ namespace FFMPEGVideoConverter
                 errorOutput.Add("!!!!!!!!!!!!!!!!");
                 SendOutputToRelayer(errorOutput);
             }
+            errorLogFile.Flush();
         }
 
         /// <summary>
