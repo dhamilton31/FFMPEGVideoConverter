@@ -133,6 +133,7 @@
             this.datePicker.Size = new System.Drawing.Size(189, 20);
             this.datePicker.TabIndex = 8;
             this.datePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
+            this.datePicker.ValueChanged += new System.EventHandler(this.datePicker_ValueChanged);
             // 
             // label2
             // 
@@ -237,7 +238,7 @@
             this.Controls.Add(this.tbOutputText);
             this.Controls.Add(this.lBDirectories);
             this.Name = "MainVideoConverterForm";
-            this.Text = "Form1";
+            this.Text = "Video Converter";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

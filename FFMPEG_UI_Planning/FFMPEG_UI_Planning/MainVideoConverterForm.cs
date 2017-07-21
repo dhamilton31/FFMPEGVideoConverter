@@ -20,7 +20,7 @@ namespace FFMPEG_UI_Planning
         private string lastDirectoryOpenedFile = "lastDir.txt";
         private string lastOpenedDirectory;
         private string btnStartConversionText = "START CONVERSION";
-        private string btnInProgressConversionText = "CONVERSION IN PROGRESS...";
+        private string btnInProgressConversionText = "CONVERSION IN PROGRESS...THIS MAY TAKE AWHILE";
         private Timer eventTimer;
 
         public MainVideoConverterForm()
@@ -127,7 +127,7 @@ namespace FFMPEG_UI_Planning
                 lbFiles.Items.Add(Path.GetFileName(fileName));
             }
             datePicker.Value = vd.StartDateTime;
-            tbTime.Text = vd.StartDateTime.ToString("HH:MM:ss:fff");
+            tbTime.Text = vd.StartDateTime.ToString("HH:mm:ss:fff");
             tbOutputFileName.Text = vd.OutputFileName;
         }
 
@@ -221,6 +221,8 @@ namespace FFMPEG_UI_Planning
                 eventTimer.Tick += CheckConversionComplete_Tick;
                 eventTimer.Interval = 500;
                 eventTimer.Start();
+                tbOutputText.Text += "\r\nVideo conversion started...this process may take up to several hours " +
+                    "depending on the number and length of videos!!!\r\n";
             }
         }
 
@@ -246,6 +248,18 @@ namespace FFMPEG_UI_Planning
                 tbPatientName.Enabled = true;
             }
             progressBar.Value = fileConversionManager.GetCompletedVideoConversion();
+        }
+
+        private void datePicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (AcceptingInput())
+            {
+                VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+                if (selectedVidDir != null)
+                {
+                    fileConversionManager.UpdateVidieoDate(selectedVidDir.FullPath, datePicker.Value);
+                }
+            }
         }
     }
 }

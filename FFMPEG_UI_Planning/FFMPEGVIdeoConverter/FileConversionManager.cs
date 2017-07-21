@@ -156,6 +156,23 @@ namespace FFMPEGVideoConverter
         }
 
         /// <summary>
+        /// Update the date for the video to be displayed on the 
+        /// burn in
+        /// </summary>
+        /// <param name="dir">Directory holding these videos</param>
+        /// <param name="newDate">New date to replace Day, Month, and Year</param>
+        public void UpdateVidieoDate(string dir, DateTime newDate)
+        {
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if (vd != null)
+            {
+                DateTime replacement = new DateTime(newDate.Year, newDate.Month, newDate.Day, vd.StartDateTime.Hour,
+                    vd.StartDateTime.Minute, vd.StartDateTime.Second, vd.StartDateTime.Millisecond);
+                vd.StartDateTime = replacement;
+            }
+        }
+
+        /// <summary>
         /// Update the output video file name of the selected directory
         /// </summary>
         /// <param name="dir">Directory to update the output file for</param>
