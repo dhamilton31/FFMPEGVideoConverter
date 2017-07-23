@@ -17,7 +17,7 @@ namespace FFMPEG_UI_Planning
     {
 
         private FileConversionManager fileConversionManager;
-        private string lastDirectoryOpenedFile = "lastDir.txt";
+        private string lastDirectoryOpenedFile;
         private string lastOpenedDirectory;
         private string btnStartConversionText = "START CONVERSION";
         private string btnInProgressConversionText = "CONVERSION IN PROGRESS...THIS MAY TAKE AWHILE";
@@ -27,6 +27,9 @@ namespace FFMPEG_UI_Planning
         {
             InitializeComponent();
             fileConversionManager = new FileConversionManager();
+            string path;
+            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            lastDirectoryOpenedFile = path + "\\lastDir.txt";
             lastOpenedDirectory = ReadLastOpenedDirectory();
             fileConversionManager.OnOutputTextReceived += FileConversionManager_OnOutputTextReceived;
         }

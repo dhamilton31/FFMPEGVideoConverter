@@ -1,0 +1,7 @@
+#files to be appended should appear in list format below with their pathways (if not in the same folder)
+file 'GOPR5591.mp4'
+file 'GP015591.mp4'
+file 'GP025591.mp4'
+file 'GP035591.mp4'
+file 'GP045591.mp4'
+

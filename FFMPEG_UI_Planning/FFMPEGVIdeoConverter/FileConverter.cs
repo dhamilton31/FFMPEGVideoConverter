@@ -95,6 +95,8 @@ namespace FFMPEGVideoConverter
             if(File.Exists(filePath))
             { 
                 startTime = ffmpegDriver.RetrieveTimestampMetadata(filePath);
+                // We are getting LastWriteTime because copy-pasting the video
+                // can overwrite the creation time.
                 DateTime StartDate = File.GetLastWriteTime(filePath);
                 // We will resort to using the file creation date if getting the metadata from FFMPEG 
                 // driver fails.

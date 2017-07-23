@@ -150,7 +150,9 @@ namespace FFMPEGVideoConverter
                     bSuccess = true;
                 }
                 catch(IOException ioEx)
-                { }
+                {
+                    SendOutputToRelayer("Error creating files list: " + ioEx.ToString());
+                }
             }
             return bSuccess;
         }
