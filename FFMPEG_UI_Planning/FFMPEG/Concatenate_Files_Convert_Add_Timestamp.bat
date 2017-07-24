@@ -1,0 +1,2 @@
+ffmpeg -f concat -i Files_for_Append_Camera_1.txt -q 10 Camera_1_Temp.avi
+ffmpeg -i Camera_1_Temp.avi -vf drawtext="fontsize=15:fontfile=/FFMPEG_Video_Program/arial.ttf:timecode='10\:11\:01\:15':rate=30:text='07/07/2017 CCF Otis\  ':fontsize=44:fontcolor='white':\boxcolor=0x000000AA:box=1:x=400-text_w/2:y=960" -q 10 Camera_One_Final.avi

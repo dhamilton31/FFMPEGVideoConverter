@@ -26,6 +26,15 @@ namespace FFMPEGVideoConverter
         // when these two steps are completed
         public const int CONVERSION_STEPS = 2;
 
+        /// <summary>
+        /// FileConverter contains all the data for the 
+        /// videos to be converted in a particular directory
+        /// as well as interfaces with ffmpeg
+        /// </summary>
+        /// <param name="dirPath">Path to the directory where the 
+        /// files are locateed</param>
+        /// <param name="outputLogRelayer">Output logger to log messages
+        /// to the UI</param>
         public FileConverter(string dirPath, OutputTextRelayer outputLogRelayer = null)
         {
             fileSorter = new FileSorter(dirPath);
@@ -82,21 +91,34 @@ namespace FFMPEGVideoConverter
 
         private DateTime DetermineStartTime(string filePath)
         {
-            DateTime starttime = DateTime.MinValue;
+            DateTime startTime = DateTime.MinValue;
             if(File.Exists(filePath))
             { 
-                starttime = ffmpegDriver.RetrieveTimestampMetadata(filePath);
+                startTime = ffmpegDriver.RetrieveTimestampMetadata(filePath);
+                // We are getting LastWriteTime because copy-pasting the video
+                // can overwrite the creation time.
+                DateTime StartDate = File.GetLastWriteTime(filePath);
                 // We will resort to using the file creation date if getting the metadata from FFMPEG 
                 // driver fails.
-                if(starttime == DateTime.MinValue)
+                if (startTime == DateTime.MinValue)
                 {
                     SendOutputToRelayer("File start time missing or invalid - using file creation time instead");
-                    starttime = File.GetCreationTime(filePath);
+                    startTime = StartDate;
+                    double videoDuration = ffmpegDriver.GetVideoDuration(filePath);
+                    // We want to subtract the duration to get the video's start time.
+                    startTime.AddSeconds((-1) * videoDuration);
                 }
+                startTime = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day, startTime.Hour,
+                    startTime.Minute, startTime.Second, startTime.Millisecond);
             }
-            return starttime;
+            return startTime;
         }
 
+        /// <summary>
+        /// Start converting the files into a single output
+        /// video and burn in timestamp
+        /// </summary>
+        /// <returns>returns true on success</returns>
         public bool BeginFileConversion()
         {
             bool bSuccess = true;

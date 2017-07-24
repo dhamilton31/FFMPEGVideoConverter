@@ -39,9 +39,21 @@ namespace FFMPEGVideoConverter
         /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = pathToFFPROBE + " -v error - select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
+            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
+        }
+
+        public double GetVideoDuration(string pathToFile)
+        {
+            string durationCommand = pathToFFPROBE + " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"" + pathToFile + "\"";
+            string outputTime = ExecuteFFMPEGCommand(durationCommand);
+            double output = 0;
+            if(double.TryParse(outputTime, out output))
+            {
+                return output;
+            }
+            return 0;
         }
 
 
@@ -60,8 +72,8 @@ namespace FFMPEGVideoConverter
                 string dirPathToFileList = pathToDirectory + "\\" + filesListToAppendFileName;
                 string dirPathToTempOutput = pathToDirectory + "\\" + tempOutputFileName;
                 string commandOut = pathToFFMPEG + " -v " + loggingLevel +" -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
-                // We will wait up to two minutes in case of a lot of files.
-                SendOutputToRelayer(ExecuteFFMPEGCommand(commandOut, 120000, true));
+                // We will wait up to 3 hoursin case of a lot of files.
+                SendOutputToRelayer(ExecuteFFMPEGCommand(commandOut, HoursToMs(3), true));
                 if(VerifyTempFileWasCreated())
                 {
                     bSuccess = true;
@@ -99,7 +111,7 @@ namespace FFMPEGVideoConverter
             // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
             string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
-            string output = ExecuteFFMPEGCommand(addTimeStampCommand, 120000, true);
+            string output = ExecuteFFMPEGCommand(addTimeStampCommand, HoursToMs(3), true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
             if (hadError)
@@ -138,7 +150,9 @@ namespace FFMPEGVideoConverter
                     bSuccess = true;
                 }
                 catch(IOException ioEx)
-                { }
+                {
+                    SendOutputToRelayer("Error creating files list: " + ioEx.ToString());
+                }
             }
             return bSuccess;
         }
@@ -195,7 +209,7 @@ namespace FFMPEGVideoConverter
             // reading to the end of its redirected stream.
             // p.WaitForExit();
             // Read the output stream first and then wait.
-            if (!logOutput)
+            else
             {
                 output = process.StandardOutput.ReadToEnd();
             }
@@ -269,5 +283,9 @@ namespace FFMPEGVideoConverter
             }
         }
 
+        private int HoursToMs(double hours)
+        {
+            return (int)TimeSpan.FromHours(hours).TotalMilliseconds;
+        }
     }
 }

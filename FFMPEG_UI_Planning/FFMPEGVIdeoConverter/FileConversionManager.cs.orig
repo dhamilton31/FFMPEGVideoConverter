@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FFMPEGVideoConverter
 {
@@ -9,7 +10,19 @@ namespace FFMPEGVideoConverter
 
     public class FileConversionManager
     {
+<<<<<<< HEAD
+
+        public enum VideoConversionError
+        {
+            ErrorNone = 0,
+            ErrorVideoDataNull,
+            ErrorNoFiles,
+            ErrorNoPatientName,
+            ErrorInvalidOutputName
+        }
+=======
         public event OutputTextHandler OnOutputTextReceived;
+>>>>>>> 57cbdd73439d75036cf7faf6bfbe23e5244fa12d
 
         /// <summary>
         /// We will have one file converter object for each directory containing a list 
@@ -17,7 +30,6 @@ namespace FFMPEGVideoConverter
         /// </summary>
         private List<FileConverter> fileConverters;
         private OutputTextRelayer textRelayer;
-        private int ConversionStepsCompletedCount;
 
         public FileConversionManager()
         {
@@ -42,7 +54,7 @@ namespace FFMPEGVideoConverter
                     return retVideoData;
                 }
             }
-            FileConverter newFileConverter = new FileConverter(newDirPath, textRelayer);
+            FileConverter newFileConverter = new FileConverter(newDirPath);
             if(newFileConverter.AnalyzeDirectory(newDirPath))
             {
                 WriteOutputText("Directory info sucessfully updated");
@@ -55,51 +67,9 @@ namespace FFMPEGVideoConverter
             retVideoData = newFileConverter.GetFilesList();
             if(retVideoData != null)
             {
-                newFileConverter.OnVideoConversionStepComplete += NewFileConverter_OnVideoConversionComplete; ;
                 fileConverters.Add(newFileConverter);
             }
             return retVideoData;
-        }
-
-        private void NewFileConverter_OnVideoConversionComplete(object sender, EventArgs e)
-        {
-            ConversionStepsCompletedCount++;
-            WriteOutputText("Steps completed count: " + ConversionStepsCompletedCount);
-        }
-
-        public int GetCompletedVideoConversion()
-        {
-            return ConversionStepsCompletedCount;
-        }
-
-        public int GetTotalNumberOfConversionSteps()
-        {
-            return fileConverters.Count * FileConverter.CONVERSION_STEPS;
-        }
-
-        public bool ErrorsOccured()
-        {
-            foreach(FileConverter con in fileConverters)
-            {
-                if(con.HadErrors())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool BeginFileConversion()
-        {
-            bool bSuccess = false;
-            // Reset the number of FileConverters that have 
-            // completed their video conversion
-            ConversionStepsCompletedCount = 0;
-            foreach (FileConverter fc in fileConverters)
-            {
-                fc.BeginFileConversion();
-            }
-            return bSuccess;
         }
 
         /// <summary>
@@ -120,18 +90,12 @@ namespace FFMPEGVideoConverter
             return new VideoData();
         }
 
-        /// <summary>
-        /// Removes the selected directory from the list
-        /// </summary>
-        /// <param name="dir">Directory to remove</param>
-        /// <returns>True if directory is found and sucessfully removed</returns>
         public bool DeleteFileConverter(string dir)
         {
             for (int i = 0; i < fileConverters.Count; i++)
             {
                 if (fileConverters[i].GetInputDirectory() == dir)
                 {
-                    fileConverters[i].Destroy();
                     fileConverters.RemoveAt(i);
                     return true;
                 }
@@ -151,42 +115,53 @@ namespace FFMPEGVideoConverter
             if(vd != null)
             {
                 vd.PatientName = newName;
-                WriteOutputText("Patient name saved");
+                WriteOutputText("Patient name updated");
             }
         }
 
-        /// <summary>
-        /// Update the date for the video to be displayed on the 
-        /// burn in
-        /// </summary>
-        /// <param name="dir">Directory holding these videos</param>
-        /// <param name="newDate">New date to replace Day, Month, and Year</param>
-        public void UpdateVidieoDate(string dir, DateTime newDate)
-        {
-            VideoData vd = GetVideoDataFromDirectory(dir);
-            if (vd != null)
-            {
-                DateTime replacement = new DateTime(newDate.Year, newDate.Month, newDate.Day, vd.StartDateTime.Hour,
-                    vd.StartDateTime.Minute, vd.StartDateTime.Second, vd.StartDateTime.Millisecond);
-                vd.StartDateTime = replacement;
-            }
-        }
-
-        /// <summary>
-        /// Update the output video file name of the selected directory
-        /// </summary>
-        /// <param name="dir">Directory to update the output file for</param>
-        /// <param name="newName">New name of the output video file</param>
         public void UpdateOutputVideoFileName(string dir, string newName)
         {
             VideoData vd = GetVideoDataFromDirectory(dir);
             if (vd != null && !String.IsNullOrEmpty(newName))
             {
                 vd.OutputFileName = newName;
-                WriteOutputText("Output name saved");
             }
         }
 
+<<<<<<< HEAD
+        public VideoConversionError VerifyReadyForConversion(string dir)
+        {
+            VideoConversionError errorCode = VideoConversionError.ErrorNone;
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if(vd != null)
+            {
+                if(vd.FilesInDirectory.Count > 0)
+                {
+                    Regex regex = new Regex(@".+\.avi");
+                    Match match = regex.Match(vd.OutputFileName);
+                    if (match.Success)
+                    {
+                        if(String.IsNullOrEmpty(vd.PatientName))
+                        {
+                            errorCode = VideoConversionError.ErrorNoPatientName;
+                        }
+                    }
+                    else
+                    {
+                        errorCode = VideoConversionError.ErrorInvalidOutputName;
+                    }
+                }
+                else
+                {
+                    errorCode = VideoConversionError.ErrorNoFiles;
+                }
+            }
+            else
+            {
+                errorCode = VideoConversionError.ErrorVideoDataNull;
+            }
+            return errorCode;
+=======
         public void WriteOutputText(OutputTextEventArgs outEventArgs)
         {
             if (OnOutputTextReceived != null && outEventArgs != null)
@@ -204,8 +179,6 @@ namespace FFMPEGVideoConverter
                 OnOutputTextReceived(this, outEventArgs);
             }
         }
-
-        
     }
 
     // The purprose of this class is to relay output messages from other classes created
@@ -225,6 +198,7 @@ namespace FFMPEGVideoConverter
                 }
                 OnOutputTextReceived(this, args);
             }
+>>>>>>> 57cbdd73439d75036cf7faf6bfbe23e5244fa12d
         }
     }
 }
