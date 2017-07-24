@@ -293,3 +293,6 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+FFMPEG_UI_Planning/FFMPEGVIdeoConverter/FFMPEG/ffprobe.exe
+FFMPEG_UI_Planning/FFMPEGVIdeoConverter/FFMPEG/ffplay.exe
+FFMPEG_UI_Planning/FFMPEGVIdeoConverter/FFMPEG/ffmpeg.exe

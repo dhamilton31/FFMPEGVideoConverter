@@ -8,8 +8,8 @@ namespace FFMPEGVideoConverter
 {
     public class FFMPEGDriver
     {
-        private string pathToFFPROBE = @"FFMPEG\ffprobe.exe";
-        private string pathToFFMPEG = @"FFMPEG\ffmpeg.exe";
+        private string pathToFFPROBE = @"\FFMPEG\ffprobe.exe";
+        private string pathToFFMPEG = @"\FFMPEG\ffmpeg.exe";
         private string filesListToAppendFileName = @"Files_for_Append.txt";
         private string tempOutputFileName = @"temp_output.avi";
         private string pathToDirectory;
@@ -30,6 +30,10 @@ namespace FFMPEGVideoConverter
             filesToAppendListCreated = false;
             this.outputLogRelayer = outputLogRelayer;
             errorLogFile = new StreamWriter(pathToDirectory + "\\" + errorLog);
+            string pathToExe = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            SendOutputToRelayer("Actual path: " + pathToExe);
+            pathToFFPROBE += pathToExe + pathToFFPROBE;
+            pathToFFMPEG += pathToExe + pathToFFMPEG;
         }
 
         /// <summary>
