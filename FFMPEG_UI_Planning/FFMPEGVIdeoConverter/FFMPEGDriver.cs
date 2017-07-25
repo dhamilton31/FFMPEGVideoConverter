@@ -8,8 +8,8 @@ namespace FFMPEGVideoConverter
 {
     public class FFMPEGDriver
     {
-        private string pathToFFPROBE = @"\FFMPEG\ffprobe.exe";
-        private string pathToFFMPEG = @"\FFMPEG\ffmpeg.exe";
+        private string pathToFFPROBE = "FFMPEG\\ffprobe.exe";
+        private string pathToFFMPEG = "FFMPEG\\ffmpeg.exe";
         private string filesListToAppendFileName = @"Files_for_Append.txt";
         private string tempOutputFileName = @"temp_output.avi";
         private string pathToDirectory;
@@ -31,9 +31,10 @@ namespace FFMPEGVideoConverter
             this.outputLogRelayer = outputLogRelayer;
             errorLogFile = new StreamWriter(pathToDirectory + "\\" + errorLog);
             string pathToExe = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            SendOutputToRelayer("Actual path: " + pathToExe);
-            pathToFFPROBE += pathToExe + pathToFFPROBE;
-            pathToFFMPEG += pathToExe + pathToFFMPEG;
+            pathToFFPROBE = "\"" + pathToExe + "\\" + pathToFFPROBE + "\""; //+ "\""
+            SendOutputToRelayer("Actual path to FFPROBE: " + pathToFFPROBE);
+            pathToFFMPEG = "\"" + pathToExe + "\\" + pathToFFMPEG + "\"";
+            SendOutputToRelayer("Actual path to FFPROBE: " + pathToFFPROBE);
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace FFMPEGVideoConverter
         /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
+            string timestampCommand = pathToFFPROBE + " -v verbose -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
         }
@@ -114,7 +115,8 @@ namespace FFMPEGVideoConverter
             // The fontfile part is weird. it needs single quotes (fails with double) and needs \\ rather than just \ in the 
             // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
-            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = 'FFMPEG\\\\arial.ttf':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
+            string dirPathToFontFile = CreateFontPath("FFMPEG\\arial.ttf");
+            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
             string output = ExecuteFFMPEGCommand(addTimeStampCommand, HoursToMs(3), true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
@@ -129,6 +131,20 @@ namespace FFMPEGVideoConverter
                 SendOutputToRelayer(errorOutput);
             }
             errorLogFile.Flush();
+        }
+
+        /// <summary>
+        /// this funciton is created to add in the extra \ needed in the path to the font file.
+        /// </summary>
+        /// <param name="pathFromExecutingDirectory"></param>
+        /// <returns></returns>
+        private string CreateFontPath(string pathFromExecutingDirectory)
+        {
+            string pathToFont = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            pathToFont = pathToFont + "\\" + pathFromExecutingDirectory;
+            // Add in extra \ so FFMPEG will be happy
+            pathToFont = pathToFont.Replace("\\", "\\\\");
+            return pathToFont;
         }
 
         /// <summary>
@@ -181,7 +197,7 @@ namespace FFMPEGVideoConverter
         private string ExecuteFFMPEGCommand(string command, int maxProcessWaitTimeMs = 5000, bool logOutput = false)
         {
             SendOutputToRelayer("Executing command: " + command);
-            command = "/C " + command;
+            command = "/C " + "\"" + command + "\"";
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
