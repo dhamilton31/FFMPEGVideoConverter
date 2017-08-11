@@ -15,6 +15,7 @@ namespace FFMPEGVideoConverter
         private DateTime startDateTime;
         private string patientName;
         private string outputFileName;
+        private string testName;
 
         public List<string> FilesInDirectory
         {
@@ -73,11 +74,24 @@ namespace FFMPEGVideoConverter
             }
         }
 
+        public string TestName
+        {
+            get
+            {
+                return testName;
+            }
+
+            set
+            {
+                testName = value;
+            }
+        }
+
         public VideoData()
         {
             FilesInDirectory = new List<string>();
             StartDateTime = DateTime.Now;
-            PatientName = "Fluffy";
+            PatientName = "PatientName";
         }
 
         public VideoData(VideoData videoData)
@@ -86,6 +100,17 @@ namespace FFMPEGVideoConverter
             this.StartDateTime = videoData.StartDateTime;
             this.PatientName = videoData.PatientName;
             this.outputFileName = videoData.outputFileName;
+        }
+
+        public string GenerateStandardOutputName()
+        {
+            string outputName = "outputVideo.avi";
+            // Output name is in format Patient_Name_MM_DD_YYYY_Test_Name
+            outputName = PatientName;
+            outputName += " " + StartDateTime.ToString("MM_dd_yyyy");
+            outputName += " " + TestName;
+            outputName = outputName.Replace(' ', '_');
+            return outputName;
         }
     }
 }

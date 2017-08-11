@@ -13,6 +13,7 @@ namespace FFMPEGVideoConverter
         private string filesListToAppendFileName = @"Files_for_Append.txt";
         private string tempOutputFileName = @"temp_output.avi";
         private string pathToDirectory;
+        private System.Diagnostics.Process process;
         private bool filesToAppendListCreated;
         private OutputTextRelayer outputLogRelayer;
         private string errorLog = "ErrorLog.log";
@@ -44,7 +45,7 @@ namespace FFMPEGVideoConverter
         /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = pathToFFPROBE + " -v verbose -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
+            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
             string outputTime = ExecuteFFMPEGCommand(timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
         }
@@ -98,7 +99,14 @@ namespace FFMPEGVideoConverter
                 errorOutput.Add("!!!!!!!!!!!!!!!!");
                 SendOutputToRelayer(errorOutput);
             }
-            errorLogFile.Flush();
+            try
+            {
+                errorLogFile.Flush();
+            }
+            catch(IOException ioEx)
+            {
+                Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
+            }
             return bSuccess;
         }
 
@@ -116,7 +124,7 @@ namespace FFMPEGVideoConverter
             // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
             string dirPathToFontFile = CreateFontPath("FFMPEG\\arial.ttf");
-            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" CCF " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
+            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
             string output = ExecuteFFMPEGCommand(addTimeStampCommand, HoursToMs(3), true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
@@ -130,7 +138,14 @@ namespace FFMPEGVideoConverter
                 errorOutput.Add("!!!!!!!!!!!!!!!!");
                 SendOutputToRelayer(errorOutput);
             }
-            errorLogFile.Flush();
+            try
+            {
+                errorLogFile.Flush();
+            }
+            catch (IOException ioEx)
+            {
+                Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
+            }
         }
 
         /// <summary>
@@ -198,7 +213,7 @@ namespace FFMPEGVideoConverter
         {
             SendOutputToRelayer("Executing command: " + command);
             command = "/C " + "\"" + command + "\"";
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             startInfo.FileName = "cmd.exe";
@@ -282,6 +297,10 @@ namespace FFMPEGVideoConverter
 
         public void Destroy()
         {
+            if (process != null && !process.HasExited)
+            {
+                process.Kill();
+            }
             errorLogFile.Close();
         }
 

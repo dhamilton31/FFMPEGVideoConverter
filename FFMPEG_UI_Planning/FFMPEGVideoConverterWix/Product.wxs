@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Product Id="*" Name="FFMPEGVideoConverter" Language="1033" Version="1.0.0.0" Manufacturer="FFMPEGConverter" UpgradeCode="393ecb2a-2283-44b5-b560-e917e7019bc0">
+  <Product Id="*" Name="FFMPEGVideoConverter" Language="1033" Version="1.0.1.0" Manufacturer="FFMPEGConverter" UpgradeCode="393ecb2a-2283-44b5-b560-e917e7019bc0">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
     <Property Id="ARPPRODUCTICON">_1D674C5362A9</Property>
     <Icon Id="_1D674C5362A9" SourceFile="..\FFMPEG_UI_Planning\Photo-Video-Film-Reel-Filled.ico" />

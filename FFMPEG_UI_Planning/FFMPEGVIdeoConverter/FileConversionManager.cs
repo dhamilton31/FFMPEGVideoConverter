@@ -139,6 +139,15 @@ namespace FFMPEGVideoConverter
             return false;
         }
 
+        public void DeleteFileConverters()
+        {
+            for(int i = 0; i < fileConverters.Count; i++)
+            {
+                fileConverters[i].Destroy();
+                fileConverters.RemoveAt(i);
+            }
+        }
+
         /// <summary>
         /// Update the name of the patient for this
         /// group of videos
@@ -177,13 +186,43 @@ namespace FFMPEGVideoConverter
         /// </summary>
         /// <param name="dir">Directory to update the output file for</param>
         /// <param name="newName">New name of the output video file</param>
-        public void UpdateOutputVideoFileName(string dir, string newName)
+        public string UpdateOutputVideoFileName(string dir, string newName)
         {
+            string outputName = "";
             VideoData vd = GetVideoDataFromDirectory(dir);
             if (vd != null && !String.IsNullOrEmpty(newName))
             {
                 vd.OutputFileName = newName;
-                WriteOutputText("Output name saved");
+                outputName = newName;
+            }
+            return outputName;
+        }
+
+        /// <summary>
+        /// Change the video data to match the standard format
+        /// </summary>
+        /// <param name="dir"></param>
+        public string UpdateOutputVideoFileName(string dir)
+        {
+            string outputName = "";
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if (vd != null)
+            {
+                outputName = vd.GenerateStandardOutputName();
+            }
+            return outputName;
+        }
+
+        /// <summary>
+        /// Change the video data to match the standard format
+        /// </summary>
+        /// <param name="dir"></param>
+        public void UpdateTestName(string dir, string newTestName)
+        {
+            VideoData vd = GetVideoDataFromDirectory(dir);
+            if (vd != null)
+            {
+                vd.TestName = newTestName;
             }
         }
 

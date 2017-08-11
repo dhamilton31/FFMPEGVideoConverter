@@ -32,6 +32,16 @@ namespace FFMPEG_UI_Planning
             lastDirectoryOpenedFile = path + "\\lastDir.txt";
             lastOpenedDirectory = ReadLastOpenedDirectory();
             fileConversionManager.OnOutputTextReceived += FileConversionManager_OnOutputTextReceived;
+            this.FormClosing += MainVideoConverterForm_FormClosing;
+        }
+
+        private void MainVideoConverterForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(!AcceptingInput())
+            {
+                MessageBox.Show("WARNING: Video Converter is closing, but FFMPEG may sometimes still continue to run in the background when conversion is not complete. Use task manager to ensure FFMPG.exe is stopped!", "Warning!!!");
+                fileConversionManager.DeleteFileConverters();
+            }
         }
 
         private void FileConversionManager_OnOutputTextReceived(object sender, FFMPEGVIdeoConverter.OutputTextEventArgs e)
@@ -132,6 +142,8 @@ namespace FFMPEG_UI_Planning
             datePicker.Value = vd.StartDateTime;
             tbTime.Text = vd.StartDateTime.ToString("HH:mm:ss:fff");
             tbOutputFileName.Text = vd.OutputFileName;
+            TBTestName.Text = vd.TestName;
+            GenerateOutputFileName();
         }
 
         private void AddNewDirectoryAndFilesToLists(string dirName)
@@ -140,8 +152,10 @@ namespace FFMPEG_UI_Planning
             {
                 VideoDirectory newVidDir = new VideoDirectory(dirName);
                 lBDirectories.Items.Add(newVidDir);
+                lBDirectories.SelectedItem = newVidDir;
                 // We will get an update for each major conversion step completed for each output video
                 progressBar.Maximum = fileConversionManager.GetTotalNumberOfConversionSteps();
+                GenerateOutputFileName();
             }
         }
 
@@ -158,6 +172,7 @@ namespace FFMPEG_UI_Planning
                 if (selectedVidDir != null && !String.IsNullOrEmpty(tbPatientName.Text))
                 {
                     fileConversionManager.UpdatePatientName(selectedVidDir.FullPath, tbPatientName.Text);
+                    GenerateOutputFileName();
                 }
             }
         }
@@ -217,6 +232,7 @@ namespace FFMPEG_UI_Planning
                 btnRemoveDir.Enabled = false;
                 tbOutputFileName.Enabled = false;
                 tbPatientName.Enabled = false;
+                TBTestName.Enabled = false;
                 fileConversionManager.BeginFileConversion();
                 btnStartConversion.Text = btnInProgressConversionText;
                 btnStartConversion.BackColor = Color.Salmon;
@@ -245,10 +261,15 @@ namespace FFMPEG_UI_Planning
                 {
                     MessageBox.Show("WARNING!! Errors may have occurred! Please see output for details.","Video Conversion Error");
                 }
+                else
+                {
+                    MessageBox.Show("Conversion completed with no errors!", "Video Conversion Complete");
+                }
                 btnAddDir.Enabled = true;
                 btnRemoveDir.Enabled = true;
                 tbOutputFileName.Enabled = true;
                 tbPatientName.Enabled = true;
+                TBTestName.Enabled = true;
             }
             progressBar.Value = fileConversionManager.GetCompletedVideoConversion();
         }
@@ -261,6 +282,31 @@ namespace FFMPEG_UI_Planning
                 if (selectedVidDir != null)
                 {
                     fileConversionManager.UpdateVidieoDate(selectedVidDir.FullPath, datePicker.Value);
+                    GenerateOutputFileName();
+                }
+            }
+        }
+
+        private void TBTestName_TextChanged(object sender, EventArgs e)
+        {
+            VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+            if (selectedVidDir != null)
+            {
+                fileConversionManager.UpdateTestName(selectedVidDir.FullPath, TBTestName.Text);
+                GenerateOutputFileName();
+            }
+
+        }
+
+        private void GenerateOutputFileName()
+        {
+            if (AcceptingInput())
+            {
+                VideoDirectory selectedVidDir = (VideoDirectory)lBDirectories.SelectedItem;
+                if (selectedVidDir != null)
+                {
+                    tbOutputFileName.Text = fileConversionManager.UpdateOutputVideoFileName(selectedVidDir.FullPath);
+                    UpdateOutputFileName();
                 }
             }
         }

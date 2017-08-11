@@ -39,6 +39,8 @@
             this.datePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TBTestName = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tbOutputFileName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tbTime = new System.Windows.Forms.TextBox();
@@ -60,7 +62,7 @@
             // 
             // tbOutputText
             // 
-            this.tbOutputText.Location = new System.Drawing.Point(104, 332);
+            this.tbOutputText.Location = new System.Drawing.Point(110, 372);
             this.tbOutputText.Multiline = true;
             this.tbOutputText.Name = "tbOutputText";
             this.tbOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -71,7 +73,7 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(119, 303);
+            this.progressBar.Location = new System.Drawing.Point(125, 343);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(641, 23);
             this.progressBar.TabIndex = 2;
@@ -80,7 +82,7 @@
             // 
             this.tbPatientName.Location = new System.Drawing.Point(101, 37);
             this.tbPatientName.Name = "tbPatientName";
-            this.tbPatientName.Size = new System.Drawing.Size(182, 20);
+            this.tbPatientName.Size = new System.Drawing.Size(229, 20);
             this.tbPatientName.TabIndex = 3;
             this.tbPatientName.LostFocus += new System.EventHandler(this.tbPatientName_TextChanged);
             // 
@@ -95,7 +97,7 @@
             // 
             // btnAddDir
             // 
-            this.btnAddDir.Location = new System.Drawing.Point(47, 254);
+            this.btnAddDir.Location = new System.Drawing.Point(46, 266);
             this.btnAddDir.Name = "btnAddDir";
             this.btnAddDir.Size = new System.Drawing.Size(58, 23);
             this.btnAddDir.TabIndex = 5;
@@ -105,7 +107,7 @@
             // 
             // btnRemoveDir
             // 
-            this.btnRemoveDir.Location = new System.Drawing.Point(126, 253);
+            this.btnRemoveDir.Location = new System.Drawing.Point(125, 265);
             this.btnRemoveDir.Name = "btnRemoveDir";
             this.btnRemoveDir.Size = new System.Drawing.Size(62, 23);
             this.btnRemoveDir.TabIndex = 6;
@@ -116,7 +118,7 @@
             // btnStartConversion
             // 
             this.btnStartConversion.BackColor = System.Drawing.Color.LightGreen;
-            this.btnStartConversion.Location = new System.Drawing.Point(253, 238);
+            this.btnStartConversion.Location = new System.Drawing.Point(234, 278);
             this.btnStartConversion.Name = "btnStartConversion";
             this.btnStartConversion.Size = new System.Drawing.Size(453, 59);
             this.btnStartConversion.TabIndex = 7;
@@ -128,9 +130,9 @@
             // 
             this.datePicker.CustomFormat = "MM/dd/yyyy";
             this.datePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.datePicker.Location = new System.Drawing.Point(94, 114);
+            this.datePicker.Location = new System.Drawing.Point(101, 114);
             this.datePicker.Name = "datePicker";
-            this.datePicker.Size = new System.Drawing.Size(189, 20);
+            this.datePicker.Size = new System.Drawing.Size(229, 20);
             this.datePicker.TabIndex = 8;
             this.datePicker.Value = new System.DateTime(2017, 7, 3, 11, 7, 38, 0);
             this.datePicker.ValueChanged += new System.EventHandler(this.datePicker_ValueChanged);
@@ -146,6 +148,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.TBTestName);
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.tbOutputFileName);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.tbTime);
@@ -158,16 +162,34 @@
             this.groupBox1.Controls.Add(this.datePicker);
             this.groupBox1.Location = new System.Drawing.Point(234, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(551, 189);
+            this.groupBox1.Size = new System.Drawing.Size(551, 225);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video Data Details";
             // 
+            // TBTestName
+            // 
+            this.TBTestName.Location = new System.Drawing.Point(101, 73);
+            this.TBTestName.Name = "TBTestName";
+            this.TBTestName.Size = new System.Drawing.Size(229, 20);
+            this.TBTestName.TabIndex = 17;
+            this.TBTestName.TextChanged += new System.EventHandler(this.TBTestName_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(22, 186);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Output File:";
+            // 
             // tbOutputFileName
             // 
-            this.tbOutputFileName.Location = new System.Drawing.Point(101, 72);
+            this.tbOutputFileName.Location = new System.Drawing.Point(101, 186);
             this.tbOutputFileName.Name = "tbOutputFileName";
-            this.tbOutputFileName.Size = new System.Drawing.Size(182, 20);
+            this.tbOutputFileName.ReadOnly = true;
+            this.tbOutputFileName.Size = new System.Drawing.Size(229, 20);
             this.tbOutputFileName.TabIndex = 15;
             this.tbOutputFileName.LostFocus += new System.EventHandler(this.tbOutputFileName_TextChanged);
             // 
@@ -176,16 +198,16 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(25, 76);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 13);
+            this.label5.Size = new System.Drawing.Size(62, 13);
             this.label5.TabIndex = 14;
-            this.label5.Text = "Output Name:";
+            this.label5.Text = "Test Name:";
             // 
             // tbTime
             // 
-            this.tbTime.Location = new System.Drawing.Point(94, 147);
+            this.tbTime.Location = new System.Drawing.Point(101, 144);
             this.tbTime.Name = "tbTime";
             this.tbTime.ReadOnly = true;
-            this.tbTime.Size = new System.Drawing.Size(189, 20);
+            this.tbTime.Size = new System.Drawing.Size(229, 20);
             this.tbTime.TabIndex = 13;
             this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
             // 
@@ -201,7 +223,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(357, 16);
+            this.label3.Location = new System.Drawing.Point(378, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(115, 13);
             this.label3.TabIndex = 11;
@@ -210,9 +232,9 @@
             // lbFiles
             // 
             this.lbFiles.FormattingEnabled = true;
-            this.lbFiles.Location = new System.Drawing.Point(358, 37);
+            this.lbFiles.Location = new System.Drawing.Point(379, 37);
             this.lbFiles.Name = "lbFiles";
-            this.lbFiles.Size = new System.Drawing.Size(153, 134);
+            this.lbFiles.Size = new System.Drawing.Size(153, 173);
             this.lbFiles.TabIndex = 10;
             // 
             // label4
@@ -228,7 +250,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(837, 473);
+            this.ClientSize = new System.Drawing.Size(837, 504);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnStartConversion);
@@ -266,6 +288,8 @@
         private System.Windows.Forms.TextBox tbTime;
         private System.Windows.Forms.TextBox tbOutputFileName;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox TBTestName;
+        private System.Windows.Forms.Label label6;
     }
 }
 

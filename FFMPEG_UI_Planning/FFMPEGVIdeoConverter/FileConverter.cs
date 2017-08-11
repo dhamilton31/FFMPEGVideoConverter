@@ -73,7 +73,8 @@ namespace FFMPEGVideoConverter
                     // Since the files are sorted, we should be able
                     // to get the date from just the first file.
                     videoData.StartDateTime = DetermineStartTime(files[0]);
-                    videoData.OutputFileName = "outputVideo.avi";
+                    videoData.TestName += "Baseline";
+                    videoData.GenerateStandardOutputName();
                     SendOutputToRelayer("Directory " + dirPath + " and files added.");
                     bSuccess = true;
                 }
