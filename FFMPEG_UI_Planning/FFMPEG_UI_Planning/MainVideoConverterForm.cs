@@ -46,7 +46,7 @@ namespace FFMPEG_UI_Planning
 
         private void FileConversionManager_OnOutputTextReceived(object sender, FFMPEGVIdeoConverter.OutputTextEventArgs e)
         {
-            if (InvokeRequired)
+            if (InvokeRequired && !this.IsDisposed)
             {
                 this.Invoke((MethodInvoker)delegate
                 {

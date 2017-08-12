@@ -45,15 +45,15 @@ namespace FFMPEGVideoConverter
         /// <returns>the start date and time if avilable, otherwise the min value for datetime</returns>
         public DateTime RetrieveTimestampMetadata(string pathToFile)
         {
-            string timestampCommand = pathToFFPROBE + " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
-            string outputTime = ExecuteFFMPEGCommand(timestampCommand);
+            string timestampCommand = " -v error -select_streams v:0 -show_entries stream_tags=timecode:format=timecode:  -of default=noprint_wrappers=1:nokey=1 -i \"" + pathToFile + "\"";
+            string outputTime = ExecuteFFMPEGCommand(pathToFFPROBE, timestampCommand);
             return ConvertTimeStampToDateTime(outputTime);
         }
 
         public double GetVideoDuration(string pathToFile)
         {
-            string durationCommand = pathToFFPROBE + " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"" + pathToFile + "\"";
-            string outputTime = ExecuteFFMPEGCommand(durationCommand);
+            string durationCommand = " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"" + pathToFile + "\"";
+            string outputTime = ExecuteFFMPEGCommand(pathToFFPROBE, durationCommand);
             double output = 0;
             if(double.TryParse(outputTime, out output))
             {
@@ -77,9 +77,9 @@ namespace FFMPEGVideoConverter
             {
                 string dirPathToFileList = pathToDirectory + "\\" + filesListToAppendFileName;
                 string dirPathToTempOutput = pathToDirectory + "\\" + tempOutputFileName;
-                string commandOut = pathToFFMPEG + " -v " + loggingLevel +" -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
+                string commandOut = " -v " + loggingLevel +" -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
                 // We will wait up to 3 hoursin case of a lot of files.
-                SendOutputToRelayer(ExecuteFFMPEGCommand(commandOut, HoursToMs(3), true));
+                SendOutputToRelayer(ExecuteFFMPEGCommand(pathToFFMPEG, commandOut, HoursToMs(3), true));
                 if(VerifyTempFileWasCreated())
                 {
                     bSuccess = true;
@@ -103,7 +103,7 @@ namespace FFMPEGVideoConverter
             {
                 errorLogFile.Flush();
             }
-            catch(IOException ioEx)
+            catch(ObjectDisposedException ioEx)
             {
                 Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
             }
@@ -124,8 +124,8 @@ namespace FFMPEGVideoConverter
             // interpreted string. This means FFMPEG\\\\arial.ttf. If in a future release this is fixed, try to 
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
             string dirPathToFontFile = CreateFontPath("FFMPEG\\arial.ttf");
-            string addTimeStampCommand = pathToFFMPEG + " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
-            string output = ExecuteFFMPEGCommand(addTimeStampCommand, HoursToMs(3), true);
+            string addTimeStampCommand = " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
+            string output = ExecuteFFMPEGCommand(pathToFFMPEG, addTimeStampCommand, HoursToMs(3), true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
             if (hadError)
@@ -142,7 +142,7 @@ namespace FFMPEGVideoConverter
             {
                 errorLogFile.Flush();
             }
-            catch (IOException ioEx)
+            catch (ObjectDisposedException ioEx)
             {
                 Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
             }
@@ -209,14 +209,14 @@ namespace FFMPEGVideoConverter
             return dt;
         }
 
-        private string ExecuteFFMPEGCommand(string command, int maxProcessWaitTimeMs = 5000, bool logOutput = false)
+        private string ExecuteFFMPEGCommand(string programPath, string command, int maxProcessWaitTimeMs = 5000, bool logOutput = false)
         {
-            SendOutputToRelayer("Executing command: " + command);
-            command = "/C " + "\"" + command + "\"";
+            SendOutputToRelayer("Executing command: " + programPath + " with arguments: " + command);
+            //command = "/C " + "\"" + command + "\"";
             process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
+            startInfo.FileName = programPath;
             startInfo.Arguments = command;
             startInfo.RedirectStandardOutput = true;
             if (logOutput)
