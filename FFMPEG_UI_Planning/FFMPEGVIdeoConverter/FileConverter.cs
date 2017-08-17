@@ -132,6 +132,13 @@ namespace FFMPEGVideoConverter
             return bSuccess;
         }
 
+        /// <summary>
+        /// Function to kick off the conversion process of all files with FFMPEGDriver
+        /// Conversion has two main steps: 
+        /// 1. Combine video files
+        /// 2. Burn in overlay with timestamp and other details
+        /// This thread starts up and keeps track of those steps
+        /// </summary>
         public void ConvertFiles()
         {
             try
@@ -166,8 +173,17 @@ namespace FFMPEGVideoConverter
                 SendOutputToRelayer(fileSorter.GetDirectory() + " Thread terminated unexpectedly. Program may be unstable. Please restart.");
                 SendOutputToRelayer("Error details: " + abort.ToString());
             }
+            catch(Exception ex)
+            {
+                SendOutputToRelayer("Unhandled exception! Program may be unstable. Please restart.");
+                SendOutputToRelayer("Error details: " + ex.ToString());
+            }
         }
 
+        /// <summary>
+        /// Used to destroy the logging thread and
+        /// FFMPEGDriver processes
+        /// </summary>
         public void Destroy()
         {
             if(convertVideoThread != null)
@@ -195,6 +211,11 @@ namespace FFMPEGVideoConverter
             this.fileExt = newExt;
         }
 
+        /// <summary>
+        /// Returns if FFMPEG encountered any errors while running.
+        /// Note that this does not necessarily mean it failed. 
+        /// </summary>
+        /// <returns>true if encountered errors</returns>
         public bool HadErrors()
         {
             return ffmpegDriver.HadErrors();

@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace FFMPEGVideoConverter
 {
+    /// <summary>
+    /// Acts as the low level interface between the ffmpeg and ffprobe exe's and the FileConverter.
+    /// </summary>
     public class FFMPEGDriver
     {
         private string pathToFFPROBE = "FFMPEG\\ffprobe.exe";
@@ -50,6 +53,11 @@ namespace FFMPEGVideoConverter
             return ConvertTimeStampToDateTime(outputTime);
         }
 
+        /// <summary>
+        /// Uses ffprobe to get the length of the video
+        /// </summary>
+        /// <param name="pathToFile">File path to video</param>
+        /// <returns></returns>
         public double GetVideoDuration(string pathToFile)
         {
             string durationCommand = " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"" + pathToFile + "\"";
@@ -79,7 +87,7 @@ namespace FFMPEGVideoConverter
                 string dirPathToTempOutput = pathToDirectory + "\\" + tempOutputFileName;
                 string commandOut = " -v " + loggingLevel +" -safe 0 -f concat -i \"" + dirPathToFileList + "\" -q 10 \"" + dirPathToTempOutput + "\"";
                 // We will wait up to 3 hoursin case of a lot of files.
-                SendOutputToRelayer(ExecuteFFMPEGCommand(pathToFFMPEG, commandOut, HoursToMs(3), true));
+                SendOutputToRelayer(ExecuteFFMPEGCommand(pathToFFMPEG, commandOut, true));
                 if(VerifyTempFileWasCreated())
                 {
                     bSuccess = true;
@@ -105,11 +113,17 @@ namespace FFMPEGVideoConverter
             }
             catch(ObjectDisposedException ioEx)
             {
-                Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
+                SendOutputToRelayer("Couldn't write output due to error: " + ioEx.ToString());
             }
             return bSuccess;
         }
 
+        /// <summary>
+        /// Adds overlay burn in on top of video using FFMPEG.exe
+        /// </summary>
+        /// <param name="timestamp">Starting date and time of the video</param>
+        /// <param name="outputName">Name of the file output with timestamp overlay</param>
+        /// <param name="patientName">Name of the patient to be added to the overlay</param>
         public void AddTimeStampOverlay(DateTime timestamp, string outputName, string patientName)
         {
             hadError = false;
@@ -125,7 +139,7 @@ namespace FFMPEGVideoConverter
             // adjust down to just FFMPEG\\arial.ttf and see if it works.
             string dirPathToFontFile = CreateFontPath("FFMPEG\\arial.ttf");
             string addTimeStampCommand = " -i \"" + dirPathToTempOutput + "\" -v " + loggingLevel + " -vf drawtext=\"fontsize = 15:fontfile = '"+ dirPathToFontFile + "':timecode = '" + timeStamp + "':rate = 30:text = '" + dateStamp +" " + patientName + "\\  ':fontsize = 44:fontcolor = 'white':boxcolor = 0x000000AA:box = 1:x = 400 - text_w / 2:y = 960\" -q 10 \"" + finalOutputFile + "\"";
-            string output = ExecuteFFMPEGCommand(pathToFFMPEG, addTimeStampCommand, HoursToMs(3), true);
+            string output = ExecuteFFMPEGCommand(pathToFFMPEG, addTimeStampCommand, true);
             DeleteTempOutputFile();
             DeleteOldOutputFile(filesListToAppendFileName);
             if (hadError)
@@ -144,7 +158,7 @@ namespace FFMPEGVideoConverter
             }
             catch (ObjectDisposedException ioEx)
             {
-                Console.WriteLine("Couldn't write output due to error: " + ioEx.ToString());
+                SendOutputToRelayer("Couldn't write output due to error: " + ioEx.ToString());
             }
         }
 
@@ -209,46 +223,55 @@ namespace FFMPEGVideoConverter
             return dt;
         }
 
-        private string ExecuteFFMPEGCommand(string programPath, string command, int maxProcessWaitTimeMs = 5000, bool logOutput = false)
+        private string ExecuteFFMPEGCommand(string programPath, string command, bool logOutput = false)
         {
-            SendOutputToRelayer("Executing command: " + programPath + " with arguments: " + command);
-            //command = "/C " + "\"" + command + "\"";
-            process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = programPath;
-            startInfo.Arguments = command;
-            startInfo.RedirectStandardOutput = true;
-            if (logOutput)
-            {
-                startInfo.RedirectStandardError = true;
-            }
-            startInfo.CreateNoWindow = true;
             string output = "";
-            if (logOutput)
-            {
-                process.OutputDataReceived += (sender, args) => SendOutputToRelayer(args.Data);
-                process.ErrorDataReceived += (sender, args) => SendOutputToLog(args.Data);
+            try {
+                SendOutputToRelayer("Executing command: " + programPath + " with arguments: " + command);
+                //command = "/C " + "\"" + command + "\"";
+                process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = programPath;
+                startInfo.Arguments = command;
+                startInfo.RedirectStandardOutput = true;
+                if (logOutput)
+                {
+                    startInfo.RedirectStandardError = true;
+                }
+                startInfo.CreateNoWindow = true;
+                
+                if (logOutput)
+                {
+                    process.OutputDataReceived += (sender, args) => SendOutputToRelayer(args.Data);
+                    process.ErrorDataReceived += (sender, args) => SendOutputToLog(args.Data);
+                }
+                startInfo.UseShellExecute = false;
+                process.StartInfo = startInfo;
+                //process.OutputDataReceived += Process_OutputDataReceived;
+                //process.ErrorDataReceived += Process_OutputDataReceived;
+                process.Start();
+                if (logOutput)
+                {
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                }
+                // Do not wait for the child process to exit before
+                // reading to the end of its redirected stream.
+                // p.WaitForExit();
+                // Read the output stream first and then wait.
+                else
+                {
+                    output = process.StandardOutput.ReadToEnd();
+                }
+                process.WaitForExit();
             }
-            startInfo.UseShellExecute = false;
-            process.StartInfo = startInfo;
-            //process.OutputDataReceived += Process_OutputDataReceived;
-            //process.ErrorDataReceived += Process_OutputDataReceived;
-            process.Start();
-            if (logOutput)
+            catch (Exception ex)
             {
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                // catchall just in case
+                output = "An unexpected excetpion occurred: " + ex.ToString();
+                SendOutputToLog(output);
             }
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            else
-            {
-                output = process.StandardOutput.ReadToEnd();
-            }
-            process.WaitForExit(maxProcessWaitTimeMs);
             return output;
         }
 
@@ -295,6 +318,9 @@ namespace FFMPEGVideoConverter
             return hadTimestampErrors || hadConcatErrors;
         }
 
+        /// <summary>
+        /// Attempts to kill any remaining running FFMPEG processes.
+        /// </summary>
         public void Destroy()
         {
             if (process != null && !process.HasExited)
@@ -314,11 +340,18 @@ namespace FFMPEGVideoConverter
 
         private void SendOutputToRelayer(string output)
         {
-            if (outputLogRelayer != null)
+            try
             {
-                List<string> lstOutput = new List<string>();
-                lstOutput.Add(output);
-                outputLogRelayer.RelayTextOutput(lstOutput);
+                if (outputLogRelayer != null)
+                {
+                    List<string> lstOutput = new List<string>();
+                    lstOutput.Add(output);
+                    outputLogRelayer.RelayTextOutput(lstOutput);
+                }
+            }
+            catch (Exception ex)
+            {
+                // We dont' want to get here!
             }
         }
 

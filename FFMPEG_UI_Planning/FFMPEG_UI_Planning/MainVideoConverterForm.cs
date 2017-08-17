@@ -46,22 +46,35 @@ namespace FFMPEG_UI_Planning
 
         private void FileConversionManager_OnOutputTextReceived(object sender, FFMPEGVIdeoConverter.OutputTextEventArgs e)
         {
-            if (InvokeRequired && !this.IsDisposed)
+            try
             {
-                this.Invoke((MethodInvoker)delegate
+                if (InvokeRequired && !this.IsDisposed)
                 {
-                    FileConversionManager_OnOutputTextReceived(sender, e);
-                });
-            }
-            else
-            {
-                List<string> output = e.ReadOutputText();
-                foreach (string s in output)
-                {
-                    tbOutputText.Text += s + "\r\n";
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        FileConversionManager_OnOutputTextReceived(sender, e);
+                    });
                 }
-                tbOutputText.SelectionStart = tbOutputText.TextLength;
-                tbOutputText.ScrollToCaret();
+                else
+                {
+                    List<string> output = e.ReadOutputText();
+                    foreach (string s in output)
+                    {
+                        tbOutputText.Text += s + "\r\n";
+                    }
+                    tbOutputText.SelectionStart = tbOutputText.TextLength;
+                    tbOutputText.ScrollToCaret();
+                }
+            }
+            catch(Exception ex)
+            {
+                using (System.IO.StreamWriter file =
+                    new System.IO.StreamWriter(@"EmergencyLog.txt", true))
+                {
+                    file.WriteLine("Exception occured, but message was saved: ");
+                    file.WriteLine(e.ReadOutputText());
+                    file.WriteLine("Exception info: " + ex.ToString());
+                }
             }
         }
 
@@ -252,26 +265,34 @@ namespace FFMPEG_UI_Planning
 
         private void CheckConversionComplete_Tick(object sender, EventArgs e)
         {
-            if(fileConversionManager.GetCompletedVideoConversion() >= fileConversionManager.GetTotalNumberOfConversionSteps())
-            {
-                btnStartConversion.Text = btnStartConversionText;
-                btnStartConversion.BackColor = Color.LightGreen;
-                eventTimer.Stop();
-                if(fileConversionManager.ErrorsOccured())
+            try {
+                if (fileConversionManager.GetCompletedVideoConversion() >= fileConversionManager.GetTotalNumberOfConversionSteps())
                 {
-                    MessageBox.Show("WARNING!! Errors may have occurred! Please see output for details.","Video Conversion Error");
+                    btnStartConversion.Text = btnStartConversionText;
+                    btnStartConversion.BackColor = Color.LightGreen;
+                    eventTimer.Stop();
+                    if (fileConversionManager.ErrorsOccured())
+                    {
+                        MessageBox.Show("WARNING!! Errors may have occurred! Please see output for details.", "Video Conversion Error");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Conversion completed with no errors!", "Video Conversion Complete");
+                    }
+                    btnAddDir.Enabled = true;
+                    btnRemoveDir.Enabled = true;
+                    tbOutputFileName.Enabled = true;
+                    tbPatientName.Enabled = true;
+                    TBTestName.Enabled = true;
                 }
-                else
-                {
-                    MessageBox.Show("Conversion completed with no errors!", "Video Conversion Complete");
-                }
-                btnAddDir.Enabled = true;
-                btnRemoveDir.Enabled = true;
-                tbOutputFileName.Enabled = true;
-                tbPatientName.Enabled = true;
-                TBTestName.Enabled = true;
+                progressBar.Value = fileConversionManager.GetCompletedVideoConversion();
             }
-            progressBar.Value = fileConversionManager.GetCompletedVideoConversion();
+            catch(Exception ex)
+            {
+                MessageBox.Show("An error has occured in updating the UI! Details: " + ex.ToString());
+                eventTimer.Stop();
+                eventTimer = null;
+            }
         }
 
         private void datePicker_ValueChanged(object sender, EventArgs e)
